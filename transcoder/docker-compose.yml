@@ -1,0 +1,19 @@
+services:
+  postgresql:
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_USER: moviey
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: moviey
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - moviey-network
+
+volumes:
+  pgdata:
+
+networks:
+  moviey-network:
