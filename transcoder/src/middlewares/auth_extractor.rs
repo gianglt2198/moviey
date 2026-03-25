@@ -1,40 +1,43 @@
-// use async_trait::async_trait;
-// use axum::{
-//     extract::FromRequestParts,
-//     http::{StatusCode, header::AUTHORIZATION, request::Parts},
-// };
+use axum::{
+    extract::FromRequestParts,
+    http::{StatusCode, header::AUTHORIZATION, request::Parts},
+};
+use jsonwebtoken::{DecodingKey, Validation, decode};
 
-// use crate::models::Claims;
+use crate::models::Claims;
 
-// #[async_trait]
-// impl<S> FromRequestParts<S> for Claims
-// where
-//     S: Send + Sync,
-// {
-//     type Rejection = StatusCode;
+// Secret key - move this to .env in production!
+const SECRET_KEY: &[u8] = b"secret_key";
 
-//     async fn from_request_parts(parts: &mut Parts, _state: &S) -> Result<Self, Self::Rejection> {
-//         // 1. Get the Authorization header
-//         let auth_header = parts
-//             .headers
-//             .get(AUTHORIZATION)
-//             .and_then(|h| h.to_str().ok())
-//             .ok_or(StatusCode::UNAUTHORIZED)?;
+impl<S> FromRequestParts<S> for Claims
+where
+    S: Send + Sync,
+{
+    type Rejection = StatusCode;
 
-//         if !auth_header.starts_with("Bearer ") {
-//             return Err(StatusCode::UNAUTHORIZED);
-//         }
+    async fn from_request_parts(parts: &mut Parts, _state: &S) -> Result<Self, Self::Rejection> {
+        // 1. Extract Bearer token from Authorization header
+        let auth_header = parts
+            .headers
+            .get(AUTHORIZATION)
+            .and_then(|h| h.to_str().ok())
+            .ok_or(StatusCode::UNAUTHORIZED)?;
 
-//         let token = &auth_header[7..]; // Strip "Bearer "
+        // 2. Validate "Bearer " prefix
+        if !auth_header.starts_with("Bearer ") {
+            return Err(StatusCode::UNAUTHORIZED);
+        }
 
-//         // 2. Validate the token
-//         let token_data = jsonwebtoken::decode::<Claims>(
-//             token,
-//             &jsonwebtoken::DecodingKey::from_secret("your_super_secret_key".as_ref()),
-//             &jsonwebtoken::Validation::default(),
-//         )
-//         .map_err(|_| StatusCode::UNAUTHORIZED)?;
+        let token = &auth_header[7..]; // Strip "Bearer "
 
-//         Ok(token_data.claims)
-//     }
-// }
+        // 3. Decode and validate JWT
+        let token_data = decode::<Claims>(
+            token,
+            &DecodingKey::from_secret(SECRET_KEY),
+            &Validation::default(),
+        )
+        .map_err(|_| StatusCode::UNAUTHORIZED)?;
+
+        Ok(token_data.claims)
+    }
+}

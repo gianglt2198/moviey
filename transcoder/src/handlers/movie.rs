@@ -1,10 +1,14 @@
 use axum::Json;
-use axum::{extract::State, response::Result};
-use sqlx::Row;
+use axum::http::StatusCode;
+use axum::{
+    extract::{Multipart, State},
+    response::Result,
+};
+use sqlx::{PgPool, Row};
 
 use crate::models::*;
 
-pub async fn get_movies(State(pool): State<sqlx::PgPool>) -> Result<Json<Vec<MovieDto>>> {
+pub async fn get_movies(State(pool): State<PgPool>) -> Result<Json<Vec<MovieDto>>> {
     let rows = sqlx::query(
         "SELECT id, title, status, duration_seconds FROM movies WHERE status = 'completed' ORDER BY created_at DESC",
     )
@@ -31,4 +35,33 @@ pub async fn get_movies(State(pool): State<sqlx::PgPool>) -> Result<Json<Vec<Mov
         .collect();
 
     Ok(axum::Json(movies))
+}
+
+pub async fn upload_movie(
+    State(_pool): State<PgPool>,
+    mut multipart: Multipart,
+) -> Result<Json<serde_json::Value>, StatusCode> {
+    while let Some(field) = multipart
+        .next_field()
+        .await
+        .map_err(|_| StatusCode::BAD_REQUEST)?
+    {
+        let filename = field
+            .file_name()
+            .ok_or(StatusCode::BAD_REQUEST)?
+            .to_string();
+
+        let bytes = field
+            .bytes()
+            .await
+            .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+
+        // Save file
+        let path = format!("./uploads/{}", filename);
+        std::fs::write(&path, bytes).map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+
+        println!("📤 Uploaded: {}", filename);
+    }
+
+    Ok(Json(serde_json::json!({"message": "Upload successful"})))
 }

@@ -11,6 +11,12 @@ pub async fn handle_event_async(pool: sqlx::PgPool, event: DebouncedEvent, outpu
     for path in &event.paths {
         if path.exists() && path.extension().map_or(false, |ext| ext == "mp4") {
             println!("🎬 New movie detected: {:?}", path);
+            println!(
+                "📊 File size: {:.2} MB",
+                std::fs::metadata(path)
+                    .map(|m| m.len() as f64 / 1_000_000 as f64)
+                    .unwrap_or(0.0)
+            );
 
             if let Err(e) = process_movie_lifecycle(&pool, path.clone(), &output_base).await {
                 eprintln!("❌ Error processing movie: {}", e);
@@ -40,14 +46,29 @@ async fn process_movie_lifecycle(
     .fetch_one(pool)
     .await?;
 
-    // 2. Transcode: Non-blocking
-    let status = run_transcode(&path, &movie_output).await?; // Notice the .await here!
-    let _ = run_thumbnail(&path, &movie_output).await?;
-    let duration = get_duration(&path).await?;
+    println!("📝 Created movie record: {}", movie_id);
 
-    // 3. Database: Mark as Completed
-    if status.success() {
-        sqlx::query!(
+    // 2. Transcode: Non-blocking
+    println!("⏳ Starting transcode...");
+    let status = run_transcode(&path, &movie_output).await?; // Notice the .await here!
+
+    if !status.success() {
+        return Err("Transcoding failed".into());
+    }
+
+    println!("✅ Transcoding completed");
+    // 3. Generate thumbnail
+    println!("🖼️ Generating thumbnail...");
+    let _ = run_thumbnail(&path, &movie_output).await?;
+    println!("✅ Thumbnail generated");
+
+    // 4. Get duration
+    println!("⏱️ Extracting duration...");
+    let duration = get_duration(&path).await?;
+    println!("✅ Duration: {} seconds", duration);
+
+    // 5. Database: Mark as Completed
+    sqlx::query!(
             r#"UPDATE movies SET status = 'completed', hls_path = $1, thumbnail_path = $2, duration_seconds = $3 WHERE id = $4"#,
             hls_index,
             format!("{}/thumbnail.jpg", movie_output),
@@ -56,15 +77,7 @@ async fn process_movie_lifecycle(
         )
         .execute(pool)
         .await?;
-        println!("✅ {} is ready for streaming!", title);
-    } else {
-        sqlx::query!(
-            r#"UPDATE movies SET status = 'failed' WHERE id = $1"#,
-            movie_id
-        )
-        .execute(pool)
-        .await?;
-    }
+    println!("✅ {} is ready for streaming!", title);
 
     Ok(())
 }
@@ -83,8 +96,8 @@ async fn run_transcode(
             "-i",
             input.to_str().unwrap(),
             // Video codec (Apple Silicon hardware)
-            "-c:v",
-            "hevc_videotoolbox",
+            // "-c:v",
+            // "hevc_videotoolbox",
             "-q:v",
             "85",
             "-allow_sw",
@@ -96,6 +109,8 @@ async fn run_transcode(
             "48",
             "-sc_threshold",
             "0",
+            "-pix_fmt",
+            "yuv420p",
             // Quality Variant 1 (1080p)
             "-map",
             "0:v",
@@ -106,23 +121,23 @@ async fn run_transcode(
             "-b:v:0",
             "5000k",
             // Quality Variant 2 (720p)
-            "-map",
-            "0:v",
-            "-map",
-            "0:a",
-            "-s:v:1",
-            "1280x720",
-            "-b:v:1",
-            "2800k",
+            // "-map",
+            // "0:v",
+            // "-map",
+            // "0:a",
+            // "-s:v:1",
+            // "1280x720",
+            // "-b:v:1",
+            // "2800k",
             // Quality Variant 3 (480p)
-            "-map",
-            "0:v",
-            "-map",
-            "0:a",
-            "-s:v:2",
-            "854x480",
-            "-b:v:2",
-            "1400k",
+            // "-map",
+            // "0:v",
+            // "-map",
+            // "0:a",
+            // "-s:v:2",
+            // "854x480",
+            // "-b:v:2",
+            // "1400k",
             // Audio codec
             "-c:a",
             "aac",
@@ -134,13 +149,14 @@ async fn run_transcode(
             "-f",
             "hls",
             "-hls_time",
-            "6",
+            "10",
             "-hls_list_size",
             "0",
             "-master_pl_name",
             "master.m3u8",
             "-var_stream_map",
-            "v:0,a:0 v:1,a:1 v:2,a:2",
+            // "v:0,a:0 v:1,a:1 v:2,a:2",
+            "v:0,a:0",
             &format!("{}/stream_%v.m3u8", output_folder),
         ])
         .status()

@@ -23,3 +23,10 @@ pub struct LoginRequest {
     pub email: String,
     pub password: String,
 }
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct UserProfile {
+    pub id: uuid::Uuid,
+    pub email: String,
+    pub created_at: chrono::DateTime<chrono::Utc>,
+}

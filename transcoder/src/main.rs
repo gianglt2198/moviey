@@ -3,9 +3,10 @@ use axum::{
     response::Result,
     routing::{get, post},
 };
+use dotenv::dotenv;
 use sqlx::postgres::PgPoolOptions;
-use std::net::SocketAddr;
 use std::sync::Arc;
+use std::{env, net::SocketAddr};
 use tower_http::{cors::CorsLayer, services::ServeDir};
 
 mod handlers;
@@ -15,36 +16,42 @@ mod runner;
 
 use handlers::*;
 
-const DATABASE_URL: &str = "postgres://moviey:password@localhost:5433/moviey";
-
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    dotenv().ok();
+
+    let database_url = env::var("DATABASE_URL")
+        .unwrap_or_else(|_| "postgres://moviey:password@localhost:5433/moviey".to_string());
+    let upload_dir = env::var("UPLOAD_DIR").unwrap_or_else(|_| "./uploads".to_string());
+    let output_dir = env::var("OUTPUT_DIR").unwrap_or_else(|_| "./stream_output".to_string());
+
     let pool = PgPoolOptions::new()
         .max_connections(5)
-        .connect(DATABASE_URL)
+        .connect(&database_url)
         .await?;
 
     // Run migrations (if you have any)
     sqlx::migrate!("./migrations").run(&pool).await?;
     println!("Database connected and migrations applied.");
 
-    let input_dir = "./uploads";
-    let output_dir = "./stream_output";
-
     let watcher_pool = pool.clone();
     let output_base = output_dir.to_string();
 
     tokio::spawn(async move {
         let runner =
-            runner::Runner::new(Arc::new(watcher_pool), input_dir.to_string(), output_base);
+            runner::Runner::new(Arc::new(watcher_pool), upload_dir.to_string(), output_base);
         runner.start().await;
     });
 
     let app = Router::new()
+        // Public routes
         .route("/api/movies", get(get_movies))
-        .nest_service("/streams", ServeDir::new(output_dir))
+        .route("/api/movies/upload", post(upload_movie))
         .route("/api/auth/register", post(register))
         .route("/api/auth/login", post(login))
+        // Protected routes
+        .route("/api/user/profile", get(get_user_profile))
+        .nest_service("/streams", ServeDir::new(output_dir))
         .layer(CorsLayer::permissive())
         .with_state(pool);
 

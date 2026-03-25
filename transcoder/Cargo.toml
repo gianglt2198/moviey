@@ -14,12 +14,14 @@ sqlx = { version = "0.8.6", features = [
     "chrono",
 ] }
 serde = { version = "1.0.228", features = ["derive"] }
-axum = { version = "0.8.8", features = ["macros"] }
+axum = { version = "0.8.8", features = ["macros", "multipart"] }
 tower-http = { version = "0.6.8", features = ["fs", "cors"] }
 uuid = { version = "1.22", features = ["v4", "serde"] }
 bcrypt = "0.19.0"
-jsonwebtoken = "10.3.0"
+jsonwebtoken = { version = "10.3.0", features = ["rust_crypto"] }
 chrono = { version = "0.4.44", features = ["serde"] }
 async-trait = "0.1.89"
 axum-extra = { version = "0.12.5", features = ["typed-header"] }
 thiserror = "2.0.18"
+dotenv = "0.15.0"
+serde_json = "1.0.149"
