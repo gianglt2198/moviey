@@ -1,0 +1,17 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "UPDATE movies SET status = 'completed', hls_path = $1, thumbnail_path = $2, duration_seconds = $3 WHERE id = $4",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Text",
+        "Int4",
+        "Uuid"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "59741fc192d6a179ce6e4a64800ad5e45c08fee96deddc3e77b5b6d985100861"
+}
