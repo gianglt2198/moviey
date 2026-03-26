@@ -1,0 +1,81 @@
+services:
+  postgres:
+    image: postgres:18-alpine
+    container_name: moviey-postgres
+    environment:
+      POSTGRES_USER: moviey
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: moviey
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - moviey-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U moviey_prod"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./transcoder
+      dockerfile: Dockerfile
+    container_name: moviey-backend
+    platform: linux/arm64/v8
+    env_file:
+      - ./configs/backend.env
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./uploads:/app/uploads
+      - ./stream_output:/app/stream_output
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+    networks:
+      - moviey-network
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    container_name: moviey-frontend
+    ports:
+      - "5173:5173"
+    env_file:
+      - ./configs/frontend.env
+    depends_on:
+      - backend
+    networks:
+      - moviey-network
+    restart: unless-stopped
+
+  nginx:
+    image: nginx:alpine
+    container_name: moviey-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./configs/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./configs/ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - moviey-network
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+
+networks:
+  moviey-network:

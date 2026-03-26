@@ -1,24 +1,35 @@
 use axum::{
-    Router,
+    Json, Router,
     response::Result,
     routing::{get, post},
 };
 use dotenv::dotenv;
+use serde_json::json;
 use sqlx::postgres::PgPoolOptions;
-use std::sync::Arc;
 use std::{env, net::SocketAddr};
+use std::{sync::Arc, time::Duration};
 use tower_http::{cors::CorsLayer, services::ServeDir};
 
 mod handlers;
+mod logging;
 mod middlewares;
 mod models;
 mod runner;
 
 use handlers::*;
 
+pub async fn health_check() -> Json<serde_json::Value> {
+    Json(json!({
+        "status": "ok",
+        "version": "1.0.0",
+        "timestamp": chrono::Utc::now().to_rfc3339()
+    }))
+}
+
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     dotenv().ok();
+    logging::init_logging();
 
     let database_url = env::var("DATABASE_URL")
         .unwrap_or_else(|_| "postgres://moviey:password@localhost:5433/moviey".to_string());
@@ -26,7 +37,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let output_dir = env::var("OUTPUT_DIR").unwrap_or_else(|_| "./stream_output".to_string());
 
     let pool = PgPoolOptions::new()
-        .max_connections(5)
+        .max_connections(20) // Increased for production
+        .min_connections(5) // Minimum idle connections
+        .acquire_timeout(Duration::from_secs(30))
+        .idle_timeout(Duration::from_secs(600))
+        .max_lifetime(Duration::from_secs(1800))
         .connect(&database_url)
         .await?;
 
@@ -44,6 +59,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     });
 
     let app = Router::new()
+        // Health check route
+        .route("/health", get(health_check))
         // Public routes
         .route("/api/movies", get(get_movies))
         .route("/api/movies/search", get(search_movies))
