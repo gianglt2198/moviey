@@ -6,13 +6,7 @@ edition = "2024"
 [dependencies]
 notify-debouncer-full = "0.7.0"
 tokio = { version = "1.50", features = ["full"] }
-sqlx = { version = "0.8.6", features = [
-    "runtime-tokio",
-    "tls-rustls",
-    "postgres",
-    "uuid",
-    "chrono",
-] }
+sqlx = { version = "0.8.6", features = ["runtime-tokio", "tls-rustls", "postgres", "uuid", "chrono", "bigdecimal", "rust_decimal"] }
 serde = { version = "1.0.228", features = ["derive"] }
 axum = { version = "0.8.8", features = ["macros", "multipart"] }
 tower-http = { version = "0.6.8", features = ["fs", "cors"] }
@@ -25,3 +19,4 @@ axum-extra = { version = "0.12.5", features = ["typed-header"] }
 thiserror = "2.0.18"
 dotenv = "0.15.0"
 serde_json = "1.0.149"
+rust_decimal = "1.40.0"

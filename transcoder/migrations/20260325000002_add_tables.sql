@@ -12,13 +12,3 @@ CREATE TABLE IF NOT EXISTS profiles (
     avatar_url TEXT,
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
-
--- The "Glue" for recommendations later
-CREATE TABLE IF NOT EXISTS watch_history (
-    profile_id UUID REFERENCES profiles(id),
-    movie_id UUID REFERENCES movies(id),
-    last_position_seconds INTEGER DEFAULT 0,
-    completed BOOLEAN DEFAULT FALSE,
-    watched_at TIMESTAMPTZ DEFAULT NOW(),
-    PRIMARY KEY (profile_id, movie_id)
-);

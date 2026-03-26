@@ -2,13 +2,11 @@ import React, { useEffect, useRef } from 'react';
 import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
 
-const VideoPlayer = ({ src }) => {
+const VideoPlayer = ({ src, onProgress }) => {
   const videoRef = useRef(null);
   const playerRef = useRef(null);
 
   useEffect(() => {
-    console.log('Initializing Video Player with src:', src);
-    // Initialize Video.js player
     if (!playerRef.current) {
       const placeholderEl = videoRef.current;
       const videoElement = placeholderEl.appendChild(
@@ -22,14 +20,20 @@ const VideoPlayer = ({ src }) => {
         fluid: true,
         sources: [{ src, type: 'application/x-mpegURL' }],
       }));
+
+      // Track progress every 10 seconds
+      player.on('timeupdate', () => {
+        const currentTime = Math.floor(player.currentTime());
+        if (currentTime % 10 === 0 && onProgress) {
+          onProgress(currentTime);
+        }
+      });
     } else {
-      // If src changes, update the player
       const player = playerRef.current;
       player.src({ src, type: 'application/x-mpegURL' });
     }
-  }, [src]);
+  }, [src, onProgress]);
 
-  // Dispose the player on unmount
   useEffect(() => {
     const player = playerRef.current;
     return () => {
@@ -40,11 +44,7 @@ const VideoPlayer = ({ src }) => {
     };
   }, [playerRef]);
 
-  return (
-    <div data-vjs-player ref={videoRef}>
-      {/* <video ref={videoRef} className="video-js vjs-big-play-centered" /> */}
-    </div>
-  );
+  return <div data-vjs-player ref={videoRef} style={{ width: '100%' }} />;
 };
 
 export default VideoPlayer;

@@ -46,11 +46,19 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let app = Router::new()
         // Public routes
         .route("/api/movies", get(get_movies))
-        .route("/api/movies/upload", post(upload_movie))
+        .route("/api/movies/search", get(search_movies))
+        .route("/api/movies/{movie_id}", get(get_movie_detail))
         .route("/api/auth/register", post(register))
         .route("/api/auth/login", post(login))
         // Protected routes
         .route("/api/user/profile", get(get_user_profile))
+        .route("/api/watch-history", get(get_watch_history))
+        .route("/api/watch-progress", post(save_watch_progress))
+        .route("/api/favorites", get(get_favorites))
+        .route("/api/favorites/toggle", post(toggle_favorite))
+        // Admin routes
+        .route("/api/movies/upload", post(upload_movie))
+        // User-specific routes
         .nest_service("/streams", ServeDir::new(output_dir))
         .layer(CorsLayer::permissive())
         .with_state(pool);
