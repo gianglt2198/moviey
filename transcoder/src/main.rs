@@ -1,5 +1,5 @@
 use axum::{
-    Json, Router,
+    Json, Router, middleware,
     response::Result,
     routing::{get, post},
 };
@@ -17,6 +17,8 @@ mod models;
 mod runner;
 
 use handlers::*;
+
+use crate::middlewares::security_headers::add_security_headers;
 
 pub async fn health_check() -> Json<serde_json::Value> {
     Json(json!({
@@ -77,6 +79,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .route("/api/movies/upload", post(upload_movie))
         // User-specific routes
         .nest_service("/streams", ServeDir::new(output_dir))
+        .layer(middleware::from_fn(add_security_headers))
         .layer(CorsLayer::permissive())
         .with_state(pool);
 
