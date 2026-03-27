@@ -1,5 +1,5 @@
 # Build stage
-FROM rust:1.94 as builder
+FROM --platform=linux/arm64 rust:1.94-bullseye as builder
 
 WORKDIR /app
 
@@ -12,10 +12,12 @@ COPY migrations ./migrations
 COPY .sqlx ./.sqlx
 
 # Build release
-RUN cargo build --release
+RUN rustup target add aarch64-unknown-linux-gnu
+RUN cargo build --release --locked  --target aarch64-unknown-linux-gnu
+RUN cp ./target/aarch64-unknown-linux-gnu/release/transcoder /app/target/release/transcoder
 
 # Runtime stage
-FROM debian:bookworm-slim
+FROM --platform=linux/arm64 debian:bullseye-slim
 
 RUN apt-get update && apt-get install -y \
     ffmpeg \

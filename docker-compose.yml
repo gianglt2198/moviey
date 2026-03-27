@@ -23,7 +23,7 @@ services:
       context: ./transcoder
       dockerfile: Dockerfile
     container_name: moviey-backend
-    platform: linux/arm64/v8
+    platform: linux/arm64
     env_file:
       - ./configs/backend.env
     ports:
