@@ -1,24 +1,109 @@
-use axum::{
-    Json, Router, middleware,
-    response::Result,
-    routing::{get, post},
-};
+use axum::{Json, Router, middleware, response::Result, routing::get};
 use dotenv::dotenv;
 use serde_json::json;
 use sqlx::postgres::PgPoolOptions;
 use std::{env, net::SocketAddr};
 use std::{sync::Arc, time::Duration};
 use tower_http::{cors::CorsLayer, services::ServeDir};
+use utoipa::{Modify, OpenApi,     openapi::security::{ApiKey, ApiKeyValue, SecurityScheme},  
+};
+use utoipa_swagger_ui::SwaggerUi;
+
+mod domains;
+mod dtos;
 
 mod handlers;
 mod logging;
 mod middlewares;
 mod models;
 mod runner;
+mod services;
 
 use handlers::*;
 
 use crate::middlewares::security_headers::add_security_headers;
+
+#[derive(OpenApi)]
+#[openapi(
+    paths(  
+        handlers::movie::handler::get_movies,  
+        handlers::movie::handler::search_movies,  
+        handlers::movie::handler::get_movie_detail,  
+        handlers::movie::handler::upload_movie,  
+        handlers::user::handler::register,  
+        handlers::user::handler::login,  
+        handlers::user::handler::get_user_profile,  
+        handlers::user::handler::create_profile,  
+        handlers::watch_history::handler::save_watch_progress,  
+        handlers::watch_history::handler::save_enhanced_watch_progress,  
+        handlers::watch_history::handler::get_watch_histories,  
+        handlers::watch_history::handler::get_watch_history,  
+        handlers::favorites::handler::toggle_favorite,  
+        handlers::favorites::handler::get_favorites,  
+        handlers::analytics::handler::get_completion_by_genre,  
+        handlers::analytics::handler::get_watch_patterns,  
+        handlers::analytics::handler::get_data_quality,  
+        handlers::analytics::handler::get_user_segment,  
+    ),  
+    components(  
+        schemas(  
+            dtos::MovieResponse,  
+            dtos::MovieDetailResponse,  
+            // dtos::SearchMovieQuery,  
+            dtos::RegisterRequest,  
+            dtos::LoginRequest,  
+            dtos::AuthResponse,  
+            dtos::CreateProfileRequest,  
+            dtos::ProfileResponse,  
+            dtos::SaveWatchProgressRequest,  
+            dtos::EnhancedWatchProgressRequest,  
+            dtos::WatchHistoryResponse,  
+            dtos::WatchHistoryDetailResponse,  
+            dtos::ToggleFavoriteRequest,  
+            dtos::FavoritesListResponse,  
+            dtos::FavoriteMovieResponse,  
+            dtos::CompletionRateByGenre,  
+            dtos::WatchTimePattern,  
+            dtos::DataQualityReport,  
+            dtos::UserSegment,  
+            models::Claims,  
+        )  
+    ),  
+    modifiers(&SecurityAddon),  
+    tags(  
+        (name = "Movies", description = "Movie listing and search endpoints"),  
+        (name = "Authentication", description = "User registration and login"),  
+        (name = "User", description = "User profile management"),  
+        (name = "Watch History", description = "Track and retrieve watch history"),  
+        (name = "Favorites", description = "Manage favorite movies"),  
+        (name = "Analytics", description = "Retrieve analytics and user insights"),  
+    ),  
+    info(  
+        title = "Movie Streaming API",  
+        description = "A comprehensive API for movie streaming with analytics",  
+        version = "1.0.0",  
+        contact(  
+            name = "API Support",  
+            email = "support@example.com"  
+        ),  
+    )  
+)]
+struct ApiDoc;
+/// Security scheme addon for JWT authentication  
+struct SecurityAddon;  
+
+impl Modify for SecurityAddon {  
+    fn modify(&self, openapi: &mut utoipa::openapi::OpenApi) {  
+        if let Some(components) = &mut openapi.components {  
+            components.add_security_scheme(  
+                "bearer_auth",  
+                SecurityScheme::ApiKey(ApiKey::Header(  
+                    ApiKeyValue::new("Authorization")
+                )),
+            )  
+        }  
+    }  
+}  
 
 pub async fn health_check() -> Json<serde_json::Value> {
     Json(json!({
@@ -51,37 +136,30 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     sqlx::migrate!("./migrations").run(&pool).await?;
     println!("Database connected and migrations applied.");
 
+    let pool = Arc::new(pool);
     let watcher_pool = pool.clone();
     let output_base = output_dir.to_string();
 
     tokio::spawn(async move {
-        let runner =
-            runner::Runner::new(Arc::new(watcher_pool), upload_dir.to_string(), output_base);
+        let runner = runner::Runner::new(watcher_pool, upload_dir.to_string(), output_base);
         runner.start().await;
     });
 
     let app = Router::new()
+        // Swagger UI route
+        .merge(SwaggerUi::new("/api-docs/swagger").url("/api-docs/openapi.json", ApiDoc::openapi()))  
         // Health check route
         .route("/health", get(health_check))
-        // Public routes
-        .route("/api/movies", get(get_movies))
-        .route("/api/movies/search", get(search_movies))
-        .route("/api/movies/{movie_id}", get(get_movie_detail))
-        .route("/api/auth/register", post(register))
-        .route("/api/auth/login", post(login))
-        // Protected routes
-        .route("/api/user/profile", get(get_user_profile))
-        .route("/api/watch-history", get(get_watch_history))
-        .route("/api/watch-progress", post(save_watch_progress))
-        .route("/api/favorites", get(get_favorites))
-        .route("/api/favorites/toggle", post(toggle_favorite))
-        // Admin routes
-        .route("/api/movies/upload", post(upload_movie))
+        // Modular routers with nesting
+        .nest("/api/movies", movie_router(pool.clone()))
+        .nest("/api/auth", user_router(pool.clone()))
+        .nest("/api/watch-history", watch_history_router(pool.clone()))
+        .nest("/api/favorites", favorites_router(pool.clone()))
+        .nest("/api/analytics", analytics_router(pool.clone()))
         // User-specific routes
         .nest_service("/streams", ServeDir::new(output_dir))
         .layer(middleware::from_fn(add_security_headers))
-        .layer(CorsLayer::permissive())
-        .with_state(pool);
+        .layer(CorsLayer::permissive());
 
     // 4. START THE SERVER
     let addr = SocketAddr::from(([127, 0, 0, 1], 3000));

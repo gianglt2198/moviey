@@ -1,0 +1,3929 @@
+This file is a merged representation of the entire codebase, combined into a single document by Repomix.
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of the entire repository's contents.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+</file_summary>
+
+<directory_structure>
+.sqlx/
+  query-03d4046fa9ee0bfe000f789e5a744c5d1041ac7e23d65b22ff3000e3ebfd38c0.json
+  query-3019173cd834e27d415a246eccc7358404acec8be342b2032c1f657c84012572.json
+  query-4cd14ef0a86a8e666d0c7482f5b7448633610dc688c1f7d3ade9efb403201c41.json
+  query-59741fc192d6a179ce6e4a64800ad5e45c08fee96deddc3e77b5b6d985100861.json
+  query-6fd86669d42f722595f5ed6ce51360fd99cd95c3a00cd487456aebb83588df6f.json
+  query-79d50988838eb9f97ec859e082968c8519ee226df84acd8ad5aee8e64236003d.json
+  query-8001a1615556d3cb2f17e49d07d8f2d4a9bee1051a6bf8a9eb3d97d70ad00465.json
+  query-fd29e5539c03b1d874e9f0805b24bdee2062f7bb6e14d0344a45f507d02843e8.json
+migrations/
+  20260325000000_create_movies_table.sql
+  20260325000001_add_metadata_to_movies.sql
+  20260325000002_add_tables.sql
+  20260325000003_add_advanced_features.sql
+  20260325000004_add_watch_history.sql
+  20260325000005_add_rich_metadata_watch_history.sql
+  20260325000006_add_user_behavior_snapshot.sql
+  20260325000007_add_data_quality_flags.sql
+  20260325000008_add_user_segments.sql
+src/
+  domains/
+    analytics.rs
+    favorites.rs
+    mod.rs
+    movie.rs
+    user.rs
+    watch_history.rs
+  dtos/
+    analytics_dto/
+      enums.rs
+      mod.rs
+      requests.rs
+    favorites_dto.rs
+    mappers.rs
+    mod.rs
+    movie_dto.rs
+    user_dto.rs
+    watch_history_dto.rs
+  handlers/
+    analytics/
+      handler.rs
+      mod.rs
+    favorites/
+      handler.rs
+      mod.rs
+    movie/
+      handler.rs
+      mod.rs
+    olds/
+      analytics.rs
+      favorites.rs
+      movie.rs
+      user.rs
+      watch_history.rs
+    user/
+      handler.rs
+      mod.rs
+      validators.rs
+    watch_history/
+      handler.rs
+      mod.rs
+    mod.rs
+  middlewares/
+    auth_extractor.rs
+    mod.rs
+    security_headers.rs
+  models/
+    analytics.rs
+    mod.rs
+    movie.rs
+    user.rs
+  runner/
+    handler.rs
+    mod.rs
+    runner.rs
+  services/
+    analytics.rs
+    mod.rs
+    segmentation.rs
+    validation.rs
+  lib.rs
+  logging.rs
+  main.rs
+.env.template
+.gitignore
+Cargo.toml
+Dockerfile
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path=".sqlx/query-03d4046fa9ee0bfe000f789e5a744c5d1041ac7e23d65b22ff3000e3ebfd38c0.json">
+{
+  "db_name": "PostgreSQL",
+  "query": "SELECT id, email, created_at FROM users WHERE id = $1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 1,
+        "name": "email",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 2,
+        "name": "created_at",
+        "type_info": "Timestamptz"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      true
+    ]
+  },
+  "hash": "03d4046fa9ee0bfe000f789e5a744c5d1041ac7e23d65b22ff3000e3ebfd38c0"
+}
+</file>
+
+<file path=".sqlx/query-3019173cd834e27d415a246eccc7358404acec8be342b2032c1f657c84012572.json">
+{
+  "db_name": "PostgreSQL",
+  "query": "DELETE FROM favorites WHERE profile_id = $1 AND movie_id = $2",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Uuid"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "3019173cd834e27d415a246eccc7358404acec8be342b2032c1f657c84012572"
+}
+</file>
+
+<file path=".sqlx/query-4cd14ef0a86a8e666d0c7482f5b7448633610dc688c1f7d3ade9efb403201c41.json">
+{
+  "db_name": "PostgreSQL",
+  "query": "SELECT id, password_hash FROM users WHERE email = $1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 1,
+        "name": "password_hash",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text"
+      ]
+    },
+    "nullable": [
+      false,
+      false
+    ]
+  },
+  "hash": "4cd14ef0a86a8e666d0c7482f5b7448633610dc688c1f7d3ade9efb403201c41"
+}
+</file>
+
+<file path=".sqlx/query-59741fc192d6a179ce6e4a64800ad5e45c08fee96deddc3e77b5b6d985100861.json">
+{
+  "db_name": "PostgreSQL",
+  "query": "UPDATE movies SET status = 'completed', hls_path = $1, thumbnail_path = $2, duration_seconds = $3 WHERE id = $4",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Text",
+        "Int4",
+        "Uuid"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "59741fc192d6a179ce6e4a64800ad5e45c08fee96deddc3e77b5b6d985100861"
+}
+</file>
+
+<file path=".sqlx/query-6fd86669d42f722595f5ed6ce51360fd99cd95c3a00cd487456aebb83588df6f.json">
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        INSERT INTO movies (title, original_path, status)\n        VALUES ($1, $2, 'processing')\n        RETURNING id\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Uuid"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Text"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "6fd86669d42f722595f5ed6ce51360fd99cd95c3a00cd487456aebb83588df6f"
+}
+</file>
+
+<file path=".sqlx/query-79d50988838eb9f97ec859e082968c8519ee226df84acd8ad5aee8e64236003d.json">
+{
+  "db_name": "PostgreSQL",
+  "query": "INSERT INTO favorites (profile_id, movie_id) VALUES ($1, $2)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Uuid"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "79d50988838eb9f97ec859e082968c8519ee226df84acd8ad5aee8e64236003d"
+}
+</file>
+
+<file path=".sqlx/query-8001a1615556d3cb2f17e49d07d8f2d4a9bee1051a6bf8a9eb3d97d70ad00465.json">
+{
+  "db_name": "PostgreSQL",
+  "query": "INSERT INTO watch_history (profile_id, movie_id, last_position_seconds, completed, watched_at, updated_at)  \n           VALUES ($1, $2, $3, $4, NOW(), NOW())  \n           ON CONFLICT(profile_id, movie_id)   \n           DO UPDATE SET last_position_seconds = $3, completed = $4, updated_at = NOW()",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Uuid",
+        "Int4",
+        "Bool"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "8001a1615556d3cb2f17e49d07d8f2d4a9bee1051a6bf8a9eb3d97d70ad00465"
+}
+</file>
+
+<file path=".sqlx/query-fd29e5539c03b1d874e9f0805b24bdee2062f7bb6e14d0344a45f507d02843e8.json">
+{
+  "db_name": "PostgreSQL",
+  "query": "INSERT INTO users (email, password_hash) VALUES ($1, $2)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Text"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "fd29e5539c03b1d874e9f0805b24bdee2062f7bb6e14d0344a45f507d02843e8"
+}
+</file>
+
+<file path="migrations/20260325000000_create_movies_table.sql">
+-- Create an ENUM for status tracking
+CREATE TYPE movie_status AS ENUM ('pending', 'processing', 'completed', 'failed');
+
+CREATE TABLE IF NOT EXISTS movies (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    title TEXT NOT NULL,
+    original_path TEXT NOT NULL,
+    hls_path TEXT,
+    status movie_status DEFAULT 'pending',
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+</file>
+
+<file path="migrations/20260325000001_add_metadata_to_movies.sql">
+ALTER TABLE movies 
+ADD COLUMN thumbnail_path TEXT,
+ADD COLUMN duration_seconds INTEGER;
+</file>
+
+<file path="migrations/20260325000002_add_tables.sql">
+CREATE TABLE IF NOT EXISTS users (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    email TEXT UNIQUE NOT NULL,
+    password_hash TEXT NOT NULL,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS profiles (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+    name TEXT NOT NULL,
+    avatar_url TEXT,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+</file>
+
+<file path="migrations/20260325000003_add_advanced_features.sql">
+-- Favorites Table (Watchlist)
+CREATE TABLE IF NOT EXISTS favorites (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    profile_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
+    movie_id UUID REFERENCES movies(id) ON DELETE CASCADE,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE(profile_id, movie_id)
+);
+
+-- Add metadata columns to movies if not exists
+ALTER TABLE movies
+ADD COLUMN IF NOT EXISTS genre TEXT DEFAULT 'Unknown',
+ADD COLUMN IF NOT EXISTS director TEXT DEFAULT 'Unknown',
+ADD COLUMN IF NOT EXISTS release_year INTEGER DEFAULT 2024,
+ADD COLUMN IF NOT EXISTS rating DECIMAL(3,1) DEFAULT 0.0,
+ADD COLUMN IF NOT EXISTS description TEXT DEFAULT '';
+
+-- Create index for faster searches
+CREATE INDEX IF NOT EXISTS idx_movies_title ON movies(title);
+CREATE INDEX IF NOT EXISTS idx_movies_genre ON movies(genre);
+CREATE INDEX IF NOT EXISTS idx_favorites_profile ON favorites(profile_id);
+</file>
+
+<file path="migrations/20260325000004_add_watch_history.sql">
+CREATE TABLE IF NOT EXISTS watch_history (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    profile_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
+    movie_id UUID REFERENCES movies(id) ON DELETE CASCADE,
+    last_position_seconds INTEGER DEFAULT 0,
+    completed BOOLEAN DEFAULT FALSE,
+    watched_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE(profile_id, movie_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_watch_history_profile ON watch_history(profile_id);
+</file>
+
+<file path="migrations/20260325000005_add_rich_metadata_watch_history.sql">
+-- Add new columns to watch_history for richer behavioral signals  
+ALTER TABLE watch_history  
+ADD COLUMN IF NOT EXISTS watch_duration_seconds INTEGER DEFAULT 0,  
+ADD COLUMN IF NOT EXISTS total_movie_duration_seconds INTEGER DEFAULT 0,  
+ADD COLUMN IF NOT EXISTS completion_percentage DECIMAL(5,2) DEFAULT 0,  
+ADD COLUMN IF NOT EXISTS watch_quality VARCHAR DEFAULT '1080p',  
+ADD COLUMN IF NOT EXISTS interrupted_count INTEGER DEFAULT 0,  
+ADD COLUMN IF NOT EXISTS last_session_resumed_at TIMESTAMPTZ NULL,  
+ADD COLUMN IF NOT EXISTS playback_speed DECIMAL(2,1) DEFAULT 1.0,  
+ADD COLUMN IF NOT EXISTS device_type VARCHAR DEFAULT 'web',  
+ADD COLUMN IF NOT EXISTS completion_reason VARCHAR DEFAULT 'abandoned',  
+ADD COLUMN IF NOT EXISTS flagged_for_review BOOLEAN DEFAULT FALSE;  
+
+-- Create indexes for frequently queried columns  
+CREATE INDEX IF NOT EXISTS idx_watch_history_completion_percentage   
+  ON watch_history(completion_percentage);  
+CREATE INDEX IF NOT EXISTS idx_watch_history_flagged   
+  ON watch_history(flagged_for_review);  
+CREATE INDEX IF NOT EXISTS idx_watch_history_device_type   
+  ON watch_history(device_type);
+</file>
+
+<file path="migrations/20260325000006_add_user_behavior_snapshot.sql">
+CREATE TABLE IF NOT EXISTS user_behavior_snapshot (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    profile_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
+    snapshot_date DATE NOT NULL,
+    movies_watched_period INTEGER DEFAULT 0,
+    total_watch_time_minutes INTEGER DEFAULT 0,
+    avg_completion_rate DECIMAL(5,2) DEFAULT 0,
+    preferred_genre VARCHAR,
+    preferred_time_of_day VARCHAR,
+    device_most_used VARCHAR,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE(profile_id, snapshot_date)
+);
+
+CREATE INDEX IF NOT EXISTS idx_behavior_snapshot_profile_date 
+  ON user_behavior_snapshot(profile_id, snapshot_date DESC);
+CREATE INDEX IF NOT EXISTS idx_behavior_snapshot_date 
+  ON user_behavior_snapshot(snapshot_date DESC);
+</file>
+
+<file path="migrations/20260325000007_add_data_quality_flags.sql">
+CREATE TABLE IF NOT EXISTS data_quality_flags (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    watch_history_id UUID REFERENCES watch_history(id) ON DELETE CASCADE,
+    flag_type VARCHAR NOT NULL,
+    flag_severity VARCHAR NOT NULL,
+    description TEXT,
+    resolved BOOLEAN DEFAULT FALSE,
+    resolved_at TIMESTAMPTZ NULL,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_quality_flags_resolved 
+  ON data_quality_flags(resolved, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_quality_flags_severity 
+  ON data_quality_flags(flag_severity);
+</file>
+
+<file path="migrations/20260325000008_add_user_segments.sql">
+CREATE TABLE IF NOT EXISTS user_segments (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    profile_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
+    segment_type VARCHAR NOT NULL,
+    segment_score DECIMAL(5,2) DEFAULT 0,
+    last_calculated_at TIMESTAMPTZ DEFAULT NOW(),
+    valid_until TIMESTAMPTZ NOT NULL,
+    metadata JSONB DEFAULT '{}',
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE(profile_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_user_segments_profile 
+  ON user_segments(profile_id);
+CREATE INDEX IF NOT EXISTS idx_user_segments_type 
+  ON user_segments(segment_type);
+</file>
+
+<file path="src/domains/analytics.rs">
+use chrono::{DateTime, NaiveDate, Utc};
+use rust_decimal::Decimal;
+use serde_json::Value as JsonValue;
+use uuid::Uuid;
+
+/// Domain model - represents the user_behavior_snapshot table
+#[derive(Debug, Clone, sqlx::FromRow)]
+pub struct UserBehaviorSnapshot {
+    pub id: Uuid,
+    pub profile_id: Uuid,
+    pub snapshot_date: NaiveDate,
+    pub movies_watched_period: i32,
+    pub total_watch_time_minutes: i32,
+    pub avg_completion_rate: Decimal,
+    pub preferred_genre: Option<String>,
+    pub preferred_time_of_day: Option<String>,
+    pub device_most_used: Option<String>,
+    pub created_at: DateTime<Utc>,
+}
+
+/// Domain model - represents the data_quality_flags table
+#[derive(Debug, Clone, sqlx::FromRow)]
+pub struct DataQualityFlag {
+    pub id: Uuid,
+    pub watch_history_id: Uuid,
+    pub flag_type: String,
+    pub flag_severity: String,
+    pub description: Option<String>,
+    pub resolved: bool,
+    pub resolved_at: Option<DateTime<Utc>>,
+    pub created_at: DateTime<Utc>,
+}
+
+/// Domain model - represents the user_segments table
+#[derive(Debug, Clone, sqlx::FromRow)]
+pub struct UserSegment {
+    pub id: Uuid,
+    pub profile_id: Uuid,
+    pub segment_type: String,
+    pub segment_score: Decimal,
+    pub last_calculated_at: DateTime<Utc>,
+    pub valid_until: DateTime<Utc>,
+    pub metadata: JsonValue,
+    pub created_at: DateTime<Utc>,
+}
+</file>
+
+<file path="src/domains/favorites.rs">
+use chrono::DateTime;
+use chrono::Utc;
+use uuid::Uuid;
+
+/// Domain model - represents the favorites table
+#[derive(Debug, Clone, sqlx::FromRow)]
+pub struct Favorite {
+    pub id: Uuid,
+    pub profile_id: Uuid,
+    pub movie_id: Uuid,
+    pub created_at: DateTime<Utc>,
+}
+</file>
+
+<file path="src/domains/mod.rs">
+pub mod analytics;
+pub mod favorites;
+pub mod movie;
+pub mod user;
+pub mod watch_history;
+
+pub use analytics::*;
+pub use favorites::*;
+pub use movie::*;
+pub use user::*;
+pub use watch_history::*;
+</file>
+
+<file path="src/domains/movie.rs">
+use chrono::{DateTime, Utc};
+use uuid::Uuid;
+
+#[derive(Debug, Clone, Copy, sqlx::Type, PartialEq)]
+#[sqlx(type_name = "movie_status", rename_all = "lowercase")]
+pub enum MovieStatus {
+    Pending,
+    Processing,
+    Completed,
+    Failed,
+}
+
+/// Domain model - represents the movies table
+#[derive(Debug, Clone, sqlx::FromRow)]
+pub struct Movie {
+    pub id: Uuid,
+    pub title: String,
+    pub original_path: String,
+    pub hls_path: Option<String>,
+    pub thumbnail_path: Option<String>,
+    pub status: MovieStatus,
+    pub genre: Option<String>,
+    pub director: Option<String>,
+    pub release_year: Option<i32>,
+    pub rating: Option<rust_decimal::Decimal>,
+    pub description: Option<String>,
+    pub duration_seconds: Option<i32>,
+    pub created_at: DateTime<Utc>,
+    pub updated_at: DateTime<Utc>,
+}
+</file>
+
+<file path="src/domains/user.rs">
+use chrono::{DateTime, Utc};
+use uuid::Uuid;
+
+/// Domain model - represents the users table
+#[derive(Debug, Clone, sqlx::FromRow)]
+pub struct User {
+    pub id: Uuid,
+    pub email: String,
+    pub password_hash: String,
+    pub created_at: Option<DateTime<Utc>>,
+}
+
+/// Domain model - represents the profiles table
+#[derive(Debug, Clone, sqlx::FromRow)]
+pub struct Profile {
+    pub id: Uuid,
+    pub user_id: Uuid,
+    pub name: String,
+    pub avatar_url: Option<String>,
+    pub created_at: DateTime<Utc>,
+}
+</file>
+
+<file path="src/domains/watch_history.rs">
+use chrono::{DateTime, Utc};
+use rust_decimal::Decimal;
+use uuid::Uuid;
+
+/// Domain model - represents the watch_history table
+#[derive(Debug, Clone, sqlx::FromRow)]
+pub struct WatchHistory {
+    pub id: Uuid,
+    pub profile_id: Uuid,
+    pub movie_id: Uuid,
+    pub last_position_seconds: i32,
+    pub completed: bool,
+    pub watched_at: DateTime<Utc>,
+    pub updated_at: DateTime<Utc>,
+    // Rich metadata columns
+    pub watch_duration_seconds: Option<i32>,
+    pub total_movie_duration_seconds: Option<i32>,
+    pub completion_percentage: Option<Decimal>,
+    pub watch_quality: Option<String>,
+    pub interrupted_count: Option<i32>,
+    pub last_session_resumed_at: Option<DateTime<Utc>>,
+    pub playback_speed: Option<Decimal>,
+    pub device_type: Option<String>,
+    pub completion_reason: Option<String>,
+    pub flagged_for_review: Option<bool>,
+}
+</file>
+
+<file path="src/dtos/analytics_dto/enums.rs">
+// ============ ENUMS ============
+
+use serde::{Deserialize, Serialize};
+use utoipa::ToSchema;
+
+#[derive(Debug, Serialize, Deserialize, Copy, Clone, PartialEq, ToSchema)]
+pub enum UserSegmentType {
+    #[serde(rename = "binge_watcher")]
+    BingeWatcher,
+    #[serde(rename = "casual_viewer")]
+    CasualViewer,
+    #[serde(rename = "explorer")]
+    Explorer,
+    #[serde(rename = "weekend_warrior")]
+    WeekendWarrior,
+    #[serde(rename = "inactive")]
+    Inactive,
+    #[serde(rename = "general")]
+    General,
+}
+
+impl UserSegmentType {
+    pub fn as_str(&self) -> &str {
+        match self {
+            UserSegmentType::BingeWatcher => "BINGE_WATCHER",
+            UserSegmentType::CasualViewer => "CASUAL_VIEWER",
+            UserSegmentType::Explorer => "EXPLORER",
+            UserSegmentType::WeekendWarrior => "WEEKEND_WARRIOR",
+            UserSegmentType::Inactive => "INACTIVE",
+            UserSegmentType::General => "GENERAL",
+        }
+    }
+
+    pub fn from_str(s: &str) -> Self {
+        match s {
+            "BINGE_WATCHER" => UserSegmentType::BingeWatcher,
+            "CASUAL_VIEWER" => UserSegmentType::CasualViewer,
+            "EXPLORER" => UserSegmentType::Explorer,
+            "WEEKEND_WARRIOR" => UserSegmentType::WeekendWarrior,
+            "INACTIVE" => UserSegmentType::Inactive,
+            _ => UserSegmentType::General,
+        }
+    }
+}
+</file>
+
+<file path="src/dtos/analytics_dto/mod.rs">
+mod enums;
+mod requests;
+
+pub use enums::*;
+pub use requests::*;
+</file>
+
+<file path="src/dtos/analytics_dto/requests.rs">
+use chrono::{DateTime, Utc};
+use serde::{Deserialize, Serialize};
+use utoipa::ToSchema;
+use uuid::Uuid;
+// ============ REQUEST DTOs ============
+
+// ============ RESPONSE DTOs ============
+
+#[derive(Debug, Serialize, ToSchema)]
+pub struct CompletionRateByGenre {
+    pub genre: String,
+    pub total_watches: i64,
+    pub avg_completion_rate: f64,
+    pub median_completion: f64,
+}
+
+#[derive(Debug, Serialize, ToSchema)]
+pub struct WatchTimePattern {
+    pub time_period: String,
+    pub watch_count: i64,
+    pub avg_completion: f64,
+}
+
+#[derive(Debug, Serialize, ToSchema)]
+pub struct DataQualityReport {
+    pub total_records: i64,
+    pub valid_records: i64,
+    pub flagged_records: i64,
+    pub validation_percentage: f64,
+    pub top_issues: Vec<(String, i64)>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
+pub struct UserSegment {
+    pub id: Uuid,
+    pub profile_id: Uuid,
+    pub segment_type: String,
+    pub segment_score: f64,
+    pub last_calculated_at: DateTime<Utc>,
+    pub valid_until: DateTime<Utc>,
+    pub metadata: serde_json::Value,
+}
+</file>
+
+<file path="src/dtos/favorites_dto.rs">
+use serde::{Deserialize, Serialize};
+use utoipa::ToSchema;
+use uuid::Uuid;
+
+// ============ REQUEST DTOs ============
+
+#[derive(Debug, Deserialize, ToSchema)]
+pub struct ToggleFavoriteRequest {
+    pub movie_id: Uuid,
+}
+
+// ============ RESPONSE DTOs ============
+
+#[derive(Debug, Serialize, ToSchema)]
+pub struct FavoritesListResponse {
+    pub total_count: i32,
+    pub favorites: Vec<FavoriteMovieResponse>,
+}
+
+#[derive(Debug, Serialize, ToSchema, Clone)]
+pub struct FavoriteMovieResponse {
+    pub id: Uuid,
+    pub title: String,
+    pub stream_url: String,
+    pub status: String,
+    pub duration: String,
+    pub thumbnail_url: String,
+    pub genre: Option<String>,
+    pub director: Option<String>,
+    pub release_year: Option<i32>,
+    pub rating: Option<f64>,
+}
+</file>
+
+<file path="src/dtos/mappers.rs">
+use rust_decimal::prelude::ToPrimitive;
+
+use crate::domains::*;
+use crate::dtos::*;
+
+pub fn map_movie_to_response(movie: Movie) -> MovieResponse {
+    MovieResponse {
+        id: movie.id,
+        title: movie.title.clone(),
+        stream_url: format!("http://localhost:3000/streams/{}/master.m3u8", movie.title),
+        status: format!("{:?}", movie.status),
+        duration: format!("{} min", movie.duration_seconds.unwrap_or(0) / 60),
+        thumbnail_url: format!(
+            "http://localhost:3000/streams/{}/thumbnail.jpg",
+            movie.title
+        ),
+    }
+}
+
+pub fn map_movie_to_detail_response(movie: Movie) -> MovieDetailResponse {
+    MovieDetailResponse {
+        id: movie.id,
+        title: movie.title.clone(),
+        stream_url: format!("http://localhost:3000/streams/{}/master.m3u8", movie.title),
+        status: format!("{:?}", movie.status),
+        duration: format!("{} min", movie.duration_seconds.unwrap_or(0) / 60),
+        thumbnail_url: format!(
+            "http://localhost:3000/streams/{}/thumbnail.jpg",
+            movie.title
+        ),
+        genre: movie.genre,
+        director: movie.director,
+        release_year: movie.release_year,
+        rating: movie.rating.map(|r| r.to_f64().unwrap_or(0.0)),
+        description: movie.description,
+    }
+}
+
+pub fn map_user_to_profile_response(user: User, profile: Option<Profile>) -> UserProfileResponse {
+    UserProfileResponse {
+        id: user.id,
+        email: user.email,
+        created_at: user.created_at.unwrap_or(chrono::Utc::now()),
+        profile: profile.map(map_profile_to_response),
+    }
+}
+
+pub fn map_profile_to_response(profile: Profile) -> ProfileResponse {
+    ProfileResponse {
+        id: profile.id,
+        name: profile.name,
+        avatar_url: profile.avatar_url,
+        created_at: profile.created_at,
+    }
+}
+
+// Map WatchHistory domain to WatchHistoryResponse DTO
+pub fn map_watch_history_to_response(history: WatchHistory) -> WatchHistoryResponse {
+    WatchHistoryResponse {
+        id: history.id,
+        movie_id: history.movie_id,
+        last_position_seconds: history.last_position_seconds,
+        completed: history.completed,
+        watched_at: history.watched_at.to_rfc3339(),
+    }
+}
+
+// Map WatchHistory domain to WatchHistoryDetailResponse DTO
+pub fn map_watch_history_to_detail_response(history: WatchHistory) -> WatchHistoryDetailResponse {
+    WatchHistoryDetailResponse {
+        id: history.id,
+        movie_id: history.movie_id,
+
+        last_position_seconds: history.last_position_seconds,
+        completed: history.completed,
+        watch_duration_seconds: history.watch_duration_seconds,
+        total_movie_duration_seconds: history.total_movie_duration_seconds,
+        completion_percentage: history
+            .completion_percentage
+            .map(|p| p.to_f64().unwrap_or(0.0)),
+        watch_quality: history.watch_quality,
+        interrupted_count: history.interrupted_count,
+        playback_speed: history.playback_speed.map(|p| p.to_f64().unwrap_or(1.0)),
+        device_type: history.device_type,
+        completion_reason: history.completion_reason,
+        flagged_for_review: history.flagged_for_review,
+        watched_at: history.watched_at.to_rfc3339(),
+    }
+}
+</file>
+
+<file path="src/dtos/mod.rs">
+pub mod analytics_dto;
+pub mod favorites_dto;
+pub mod mappers;
+pub mod movie_dto;
+pub mod user_dto;
+pub mod watch_history_dto;
+
+pub use analytics_dto::*;
+pub use favorites_dto::*;
+pub use mappers::*;
+pub use movie_dto::*;
+pub use user_dto::*;
+pub use watch_history_dto::*;
+</file>
+
+<file path="src/dtos/movie_dto.rs">
+use serde::{Deserialize, Serialize};
+use utoipa::{IntoParams, ToSchema};
+use uuid::Uuid;
+
+// ============ REQUEST DTOs ============
+
+#[derive(Debug, Deserialize, IntoParams)]
+pub struct SearchMovieQuery {
+    pub q: Option<String>,
+    pub genre: Option<String>,
+    pub sort: Option<String>, // recent, rating, title
+}
+
+// ============ RESPONSE DTOs ============
+
+#[derive(Debug, Serialize, ToSchema, Clone)]
+pub struct MovieResponse {
+    pub id: Uuid,
+    pub title: String,
+    pub stream_url: String,
+    pub status: String,
+    pub duration: String,
+    pub thumbnail_url: String,
+}
+
+#[derive(Debug, Serialize, ToSchema, Clone)]
+pub struct MovieDetailResponse {
+    pub id: Uuid,
+    pub title: String,
+    pub stream_url: String,
+    pub status: String,
+    pub duration: String,
+    pub thumbnail_url: String,
+    pub genre: Option<String>,
+    pub director: Option<String>,
+    pub release_year: Option<i32>,
+    pub rating: Option<f64>,
+    pub description: Option<String>,
+}
+</file>
+
+<file path="src/dtos/user_dto.rs">
+use chrono::{DateTime, Utc};
+use serde::{Deserialize, Serialize};
+use utoipa::ToSchema;
+use uuid::Uuid;
+
+// ============ REQUEST DTOs ============
+
+#[derive(Debug, Deserialize, ToSchema)]
+pub struct RegisterRequest {
+    pub email: String,
+    pub password: String,
+}
+
+#[derive(Debug, Deserialize, ToSchema)]
+pub struct LoginRequest {
+    pub email: String,
+    pub password: String,
+}
+
+#[derive(Debug, Deserialize, ToSchema)]
+pub struct CreateProfileRequest {
+    pub name: String,
+    pub avatar_url: Option<String>,
+}
+
+// ============ RESPONSE DTOs ============
+
+#[derive(Debug, Serialize, ToSchema)]
+pub struct AuthResponse {
+    pub token: String,
+    pub token_type: String,
+}
+
+#[derive(Debug, Serialize, ToSchema)]
+pub struct UserProfileResponse {
+    pub id: Uuid,
+    pub email: String,
+    pub created_at: DateTime<Utc>,
+    pub profile: Option<ProfileResponse>,
+}
+
+#[derive(Debug, Serialize, ToSchema)]
+pub struct ProfileResponse {
+    pub id: Uuid,
+    pub name: String,
+    pub avatar_url: Option<String>,
+    pub created_at: DateTime<Utc>,
+}
+</file>
+
+<file path="src/dtos/watch_history_dto.rs">
+use serde::{Deserialize, Serialize};
+use utoipa::ToSchema;
+use uuid::Uuid;
+
+// ============ REQUEST DTOs ============
+
+#[derive(Debug, Deserialize, ToSchema)]
+pub struct SaveWatchProgressRequest {
+    pub movie_id: Uuid,
+    pub position_seconds: i32,
+    pub completed: bool,
+}
+
+#[derive(Debug, Deserialize, ToSchema)]
+pub struct EnhancedWatchProgressRequest {
+    pub movie_id: Uuid,
+    pub watch_duration_seconds: i32,
+    pub total_movie_duration_seconds: i32,
+    pub watch_quality: String,
+    pub interrupted_count: i32,
+    pub playback_speed: f64,
+    pub device_type: String,
+    pub completed: bool,
+}
+
+// ============ RESPONSE DTOs ============
+
+#[derive(Debug, Serialize, ToSchema, Clone)]
+pub struct WatchHistoryResponse {
+    pub id: Uuid,
+    pub movie_id: Uuid,
+    pub last_position_seconds: i32,
+    pub completed: bool,
+    pub watched_at: String,
+}
+
+#[derive(Debug, Serialize, ToSchema, Clone)]
+pub struct WatchHistoryDetailResponse {
+    pub id: Uuid,
+    pub movie_id: Uuid,
+    pub last_position_seconds: i32,
+    pub completed: bool,
+    pub watch_duration_seconds: Option<i32>,
+    pub total_movie_duration_seconds: Option<i32>,
+    pub completion_percentage: Option<f64>,
+    pub watch_quality: Option<String>,
+    pub interrupted_count: Option<i32>,
+    pub playback_speed: Option<f64>,
+    pub device_type: Option<String>,
+    pub completion_reason: Option<String>,
+    pub flagged_for_review: Option<bool>,
+    pub watched_at: String,
+}
+</file>
+
+<file path="src/handlers/analytics/handler.rs">
+use std::sync::Arc;
+
+use axum::{Json, extract::State, http::StatusCode};
+use sqlx::PgPool;
+
+use crate::dtos::*;
+use crate::models::Claims;
+use crate::services::analytics::AnalyticsService;
+
+/// Get completion rate by genre
+pub async fn get_completion_by_genre(
+    State(pool): State<Arc<PgPool>>,
+) -> Result<Json<Vec<CompletionRateByGenre>>, StatusCode> {
+    let data = AnalyticsService::get_completion_rate_by_genre(pool.as_ref())
+        .await
+        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+
+    Ok(Json(data))
+}
+
+/// Get watch patterns by time of day
+pub async fn get_watch_patterns(
+    State(pool): State<Arc<PgPool>>,
+) -> Result<Json<Vec<WatchTimePattern>>, StatusCode> {
+    let data = AnalyticsService::get_watch_patterns_by_time(pool.as_ref())
+        .await
+        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+
+    Ok(Json(data))
+}
+
+/// Get data quality report
+pub async fn get_data_quality(
+    State(pool): State<Arc<PgPool>>,
+) -> Result<Json<DataQualityReport>, StatusCode> {
+    let report = AnalyticsService::get_data_quality_report(pool.as_ref())
+        .await
+        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+
+    Ok(Json(report))
+}
+
+/// Get user's segment
+pub async fn get_user_segment(
+    claims: Claims,
+    State(pool): State<Arc<PgPool>>,
+) -> Result<Json<UserSegment>, StatusCode> {
+    let profile_id: Option<uuid::Uuid> =
+        sqlx::query_scalar("SELECT id FROM profiles WHERE user_id = $1 LIMIT 1")
+            .bind(claims.sub)
+            .fetch_optional(pool.as_ref())
+            .await
+            .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+
+    let profile_id = profile_id.ok_or(StatusCode::NOT_FOUND)?;
+
+    let segment = sqlx::query_as::<
+        _,
+        (
+            uuid::Uuid,
+            uuid::Uuid,
+            String,
+            f64,
+            String,
+            String,
+            serde_json::Value,
+        ),
+    >(
+        r#"SELECT id, profile_id, segment_type, segment_score,
+                  last_calculated_at, valid_until, metadata FROM user_segments
+           WHERE profile_id = $1"#,
+    )
+    .bind(profile_id)
+    .fetch_one(pool.as_ref())
+    .await
+    .map_err(|_| StatusCode::NOT_FOUND)?;
+
+    Ok(Json(UserSegment {
+        id: segment.0,
+        profile_id: segment.1,
+        segment_type: segment.2,
+        segment_score: segment.3,
+        last_calculated_at: segment.4.parse().unwrap_or_else(|_| chrono::Utc::now()),
+        valid_until: segment.5.parse().unwrap_or_else(|_| chrono::Utc::now()),
+        metadata: segment.6,
+    }))
+}
+</file>
+
+<file path="src/handlers/analytics/mod.rs">
+use std::sync::Arc;
+
+use axum::{Router, routing::get};
+use sqlx::PgPool;
+
+pub mod handler;
+
+pub fn router(pool: Arc<PgPool>) -> Router {
+    Router::new()
+        .route(
+            "/completion-by-genre",
+            get(handler::get_completion_by_genre),
+        )
+        .route("/watch-patterns", get(handler::get_watch_patterns))
+        .route("/data-quality", get(handler::get_data_quality))
+        .route("/user/segment", get(handler::get_user_segment))
+        .with_state(pool)
+}
+</file>
+
+<file path="src/handlers/favorites/handler.rs">
+use std::sync::Arc;
+
+use axum::{Json, extract::State, http::StatusCode};
+use rust_decimal::prelude::ToPrimitive;
+use sqlx::PgPool;
+
+use crate::domains::Movie;
+use crate::dtos::favorites_dto::*;
+use crate::models::Claims;
+
+/// Toggle favorite status for a movie
+pub async fn toggle_favorite(
+    claims: Claims,
+    State(pool): State<Arc<PgPool>>,
+    Json(payload): Json<ToggleFavoriteRequest>,
+) -> Result<StatusCode, StatusCode> {
+    // Get or create profile
+    let profile_id: Option<uuid::Uuid> =
+        sqlx::query_scalar("SELECT id FROM profiles WHERE user_id = $1 LIMIT 1")
+            .bind(claims.sub)
+            .fetch_optional(pool.as_ref())
+            .await
+            .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+
+    let profile_id = match profile_id {
+        Some(id) => id,
+        None => sqlx::query_scalar::<_, uuid::Uuid>(
+            "INSERT INTO profiles (user_id, name) VALUES ($1, $2) RETURNING id",
+        )
+        .bind(claims.sub)
+        .bind("Default Profile")
+        .fetch_one(pool.as_ref())
+        .await
+        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?,
+    };
+
+    // Check if already favorited
+    let exists: bool = sqlx::query_scalar(
+        "SELECT EXISTS(SELECT 1 FROM favorites WHERE profile_id = $1 AND movie_id = $2)",
+    )
+    .bind(profile_id)
+    .bind(payload.movie_id)
+    .fetch_one(pool.as_ref())
+    .await
+    .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+
+    if exists {
+        // Remove favorite
+        sqlx::query!(
+            "DELETE FROM favorites WHERE profile_id = $1 AND movie_id = $2",
+            profile_id,
+            payload.movie_id
+        )
+        .execute(pool.as_ref())
+        .await
+        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+
+        Ok(StatusCode::NO_CONTENT)
+    } else {
+        // Add favorite
+        sqlx::query!(
+            "INSERT INTO favorites (profile_id, movie_id) VALUES ($1, $2)",
+            profile_id,
+            payload.movie_id
+        )
+        .execute(pool.as_ref())
+        .await
+        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+
+        Ok(StatusCode::CREATED)
+    }
+}
+
+/// Get all favorites for current user
+pub async fn get_favorites(
+    claims: Claims,
+    State(pool): State<Arc<PgPool>>,
+) -> Result<Json<FavoritesListResponse>, StatusCode> {
+    let profile_id: Option<uuid::Uuid> =
+        sqlx::query_scalar("SELECT id FROM profiles WHERE user_id = $1 LIMIT 1")
+            .bind(claims.sub)
+            .fetch_optional(pool.as_ref())
+            .await
+            .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+
+    let profile_id = profile_id.ok_or(StatusCode::NOT_FOUND)?;
+
+    // Get favorite movies
+    let rows: Vec<Movie> = sqlx::query_as(
+        r#"SELECT m.* FROM  movies m 
+           JOIN favorites f ON f.movie_id = m.id
+           WHERE f.profile_id = $1 AND m.status = 'completed'
+           ORDER BY f.created_at DESC"#,
+    )
+    .bind(profile_id)
+    .fetch_all(pool.as_ref())
+    .await
+    .unwrap_or_default();
+
+    let total_count = rows.len() as i32;
+    let favorites = rows
+        .into_iter()
+        .map(|movie| FavoriteMovieResponse {
+            id: movie.id,
+            title: movie.title.clone(),
+            stream_url: format!("http://localhost:3000/streams/{}/master.m3u8", movie.title),
+            status: format!("{:?}", movie.status),
+            duration: format!("{} min", movie.duration_seconds.unwrap_or(0) / 60),
+            thumbnail_url: format!(
+                "http://localhost:3000/streams/{}/thumbnail.jpg",
+                movie.title
+            ),
+            genre: movie.genre,
+            director: movie.director,
+            release_year: movie.release_year,
+            rating: movie.rating.map(|r| r.to_f64().unwrap_or(0.0)),
+        })
+        .collect();
+
+    Ok(Json(FavoritesListResponse {
+        total_count,
+        favorites,
+    }))
+}
+</file>
+
+<file path="src/handlers/favorites/mod.rs">
+use std::sync::Arc;
+
+use axum::{
+    Router,
+    routing::{get, post},
+};
+use sqlx::PgPool;
+
+pub mod handler;
+
+pub fn router(pool: Arc<PgPool>) -> Router {
+    Router::new()
+        .route("/", get(handler::get_favorites))
+        .route("/toggle", post(handler::toggle_favorite))
+        .with_state(pool)
+}
+</file>
+
+<file path="src/handlers/movie/handler.rs">
+use std::sync::Arc;
+
+use axum::{
+    Json,
+    extract::{Multipart, Path, Query, State},
+    http::StatusCode,
+};
+use sqlx::PgPool;
+use uuid::Uuid;
+
+use crate::{domains::*, dtos::*};
+
+/// Get all movies (paginated, completed only)  
+pub async fn get_movies(
+    State(pool): State<Arc<PgPool>>,
+) -> Result<Json<Vec<MovieResponse>>, StatusCode> {
+    let movies = sqlx::query_as::<_, Movie>(
+        "SELECT * FROM movies WHERE status = 'completed' ORDER BY created_at DESC LIMIT 20",
+    )
+    .fetch_all(pool.as_ref())
+    .await
+    .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+
+    let responses = movies.into_iter().map(map_movie_to_response).collect();
+
+    Ok(Json(responses))
+}
+
+/// Search movies by title, director, or description  
+pub async fn search_movies(
+    State(pool): State<Arc<PgPool>>,
+    Query(params): Query<SearchMovieQuery>,
+) -> Result<Json<Vec<MovieDetailResponse>>, StatusCode> {
+    let mut query = String::from("SELECT * FROM movies WHERE status = 'completed'");
+
+    // Add search filters
+    if let Some(search_term) = &params.q {
+        let safe_term = search_term.replace("'", "''");
+        query.push_str(&format!(
+            " AND (title ILIKE '%{}%' OR director ILIKE '%{}%' OR description ILIKE '%{}%')",
+            safe_term, safe_term, safe_term
+        ));
+    }
+
+    if let Some(genre_filter) = &params.genre {
+        let safe_genre = genre_filter.replace("'", "''");
+        query.push_str(&format!(" AND genre ILIKE '%{}%'", safe_genre));
+    }
+
+    // Add sorting
+    match params.sort.as_deref() {
+        Some("recent") => query.push_str(" ORDER BY created_at DESC"),
+        Some("rating") => query.push_str(" ORDER BY rating DESC"),
+        Some("title") => query.push_str(" ORDER BY title ASC"),
+        _ => query.push_str(" ORDER BY created_at DESC"),
+    }
+
+    let movies = sqlx::query_as::<_, Movie>(&query)
+        .fetch_all(pool.as_ref())
+        .await
+        .unwrap_or_default();
+
+    let responses = movies
+        .into_iter()
+        .map(map_movie_to_detail_response)
+        .collect();
+
+    Ok(Json(responses))
+}
+
+/// Get movie details by ID  
+pub async fn get_movie_detail(
+    State(pool): State<Arc<PgPool>>,
+    Path(movie_id): Path<Uuid>,
+) -> Result<Json<MovieDetailResponse>, StatusCode> {
+    let movie = sqlx::query_as::<_, Movie>("SELECT * FROM movies WHERE id = $1")
+        .bind(movie_id)
+        .fetch_one(pool.as_ref())
+        .await
+        .map_err(|_| StatusCode::NOT_FOUND)?;
+
+    Ok(Json(map_movie_to_detail_response(movie)))
+}
+
+/// Upload a new movie file  
+pub async fn upload_movie(
+    State(_pool): State<Arc<PgPool>>,
+    mut multipart: Multipart,
+) -> Result<Json<serde_json::Value>, StatusCode> {
+    while let Some(field) = multipart
+        .next_field()
+        .await
+        .map_err(|_| StatusCode::BAD_REQUEST)?
+    {
+        let filename = field
+            .file_name()
+            .ok_or(StatusCode::BAD_REQUEST)?
+            .to_string();
+
+        let bytes = field
+            .bytes()
+            .await
+            .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+
+        // TODO: add upload folder to config later
+        let path = format!("./uploads/{}", filename);
+        std::fs::write(&path, bytes).map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+
+        println!("📤 Uploaded: {}", filename);
+    }
+
+    Ok(Json(serde_json::json!({"message": "Upload successful"})))
+}
+</file>
+
+<file path="src/handlers/movie/mod.rs">
+use std::sync::Arc;
+
+use axum::{
+    Router,
+    routing::{get, post},
+};
+use sqlx::PgPool;
+
+pub mod handler;
+
+pub fn router(pool: Arc<PgPool>) -> Router {
+    Router::new()
+        .route("/", get(handler::get_movies))
+        .route("/search", get(handler::search_movies))
+        .route("/{movie_id}", get(handler::get_movie_detail))
+        .route("/upload", post(handler::upload_movie))
+        .with_state(pool)
+}
+</file>
+
+<file path="src/handlers/olds/analytics.rs">
+use std::sync::Arc;
+
+use axum::Json;
+use axum::extract::State;
+use axum::http::StatusCode;
+use axum::response::Result;
+use sqlx::PgPool;
+use uuid::Uuid;
+
+use crate::models::*;
+use crate::services::{analytics::AnalyticsService, validation::RuleValidator};
+
+// pub(crate) fn router(pool: Arc<sqlx::PgPool>) -> OpenApiRouter {
+//     OpenApiRouter::new()
+//         .routes(routes!(save_enhanced_watch_progress))
+//         .routes(routes!(get_completion_by_genre))
+//         .routes(routes!(get_watch_patterns))
+//         .routes(routes!(get_data_quality))
+//         .routes(routes!(get_user_segment))
+//         .with_state(pool)
+// }
+
+#[utoipa::path(
+    post,
+    path = "/api/analytics/watch-progress",
+    responses(
+        (status = 200, description = "Watch progress saved successfully"),
+        (status = NOT_FOUND, description = "User profile not found")
+    )
+)]
+pub async fn save_enhanced_watch_progress(
+    claims: Claims,
+    State(pool): State<PgPool>,
+    Json(payload): Json<WatchProgressRequest>,
+) -> Result<StatusCode> {
+    let profile_id: Uuid = sqlx::query_scalar("SELECT id FROM profiles WHERE user_id = $1 LIMIT 1")
+        .bind(claims.sub)
+        .fetch_optional(&pool)
+        .await
+        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?
+        .ok_or(StatusCode::NOT_FOUND)?;
+
+    // Validate data
+    RuleValidator::validate_device_type(&payload.device_type)
+        .map_err(|_| StatusCode::BAD_REQUEST)?;
+
+    let playback_speed = RuleValidator::validate_playback_speed(payload.playback_speed)
+        .map_err(|_| StatusCode::BAD_REQUEST)?;
+
+    RuleValidator::validate_interrupt_count(payload.interrupted_count)
+        .map_err(|_| StatusCode::BAD_REQUEST)?;
+
+    // Calculate completion percentage
+    let completion_percentage = RuleValidator::calculate_completion_percentage(
+        payload.watch_duration_seconds,
+        payload.total_movie_duration_seconds,
+    );
+
+    let completion_reason =
+        RuleValidator::determine_completion_reason(payload.completed, completion_percentage);
+
+    // Save watch history with additional metadata in analytics table
+    AnalyticsService::save_watch_history_with_metadata(
+        &pool,
+        profile_id,
+        payload,
+        completion_percentage,
+        playback_speed,
+        completion_reason,
+    )
+    .await?;
+
+    Ok(StatusCode::CREATED)
+}
+
+#[utoipa::path(
+    get,
+    path =  "/api/analytics/completion-by-genre",
+    responses(
+        (status = 200, description = "Completion rate by genre retrieved successfully"),
+        (status = NOT_FOUND, description = "User profile not found")
+    )
+)]
+// Get completion rate by genre
+pub async fn get_completion_by_genre(
+    State(pool): State<PgPool>,
+) -> Result<Json<Vec<CompletionRateByGenre>>> {
+    let data = AnalyticsService::get_completion_rate_by_genre(&pool)
+        .await
+        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+
+    Ok(Json(data))
+}
+
+// Get watch patterns
+#[utoipa::path(
+    get,
+    path =  "/api/analytics/watch-patterns",
+    responses(
+        (status = 200, description = "Watch patterns retrieved successfully"),
+        (status = NOT_FOUND, description = "User profile not found")
+    )
+)]
+pub async fn get_watch_patterns(
+    _claims: Claims,
+    State(pool): State<PgPool>,
+) -> Result<Json<Vec<WatchTimePattern>>> {
+    let data = AnalyticsService::get_watch_patterns_by_time(&pool)
+        .await
+        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+
+    Ok(Json(data))
+}
+
+// Get data quality report
+#[utoipa::path(
+    get,
+    path =  "/api/analytics/data-quality",
+    responses(
+        (status = 200, description = "Data quality report retrieved successfully"),
+        (status = NOT_FOUND, description = "User profile not found")
+    )
+)]
+pub async fn get_data_quality(State(pool): State<PgPool>) -> Result<Json<DataQualityReport>> {
+    let report = AnalyticsService::get_data_quality_report(&pool)
+        .await
+        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+
+    Ok(Json(report))
+}
+
+// Get user's current segment
+#[utoipa::path(
+    get,
+    path =  "/api/analytics/user/segment",
+    responses(
+        (status = 200, description = "User segment retrieved successfully"),
+        (status = NOT_FOUND, description = "User profile not found")
+    )
+)]
+pub async fn get_user_segment(
+    claims: Claims,
+    State(pool): State<PgPool>,
+) -> Result<Json<UserSegment>, StatusCode> {
+    let profile_id: Uuid = sqlx::query_scalar("SELECT id FROM profiles WHERE user_id = $1 LIMIT 1")
+        .bind(claims.sub)
+        .fetch_optional(&pool)
+        .await
+        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?
+        .ok_or(StatusCode::NOT_FOUND)?;
+
+    let segment = sqlx::query_as::<_, (Uuid, Uuid, String, f64, String, String, String)>(
+        "SELECT id, profile_id, segment_type, segment_score,   
+                last_calculated_at, valid_until, metadata FROM user_segments   
+         WHERE profile_id = $1",
+    )
+    .bind(profile_id)
+    .fetch_one(&pool)
+    .await
+    .map_err(|_| StatusCode::NOT_FOUND)?;
+
+    Ok(Json(UserSegment {
+        id: segment.0,
+        profile_id: segment.1,
+        segment_type: segment.2,
+        segment_score: segment.3,
+        last_calculated_at: segment.4.parse().unwrap(),
+        valid_until: segment.5.parse().unwrap(),
+        metadata: serde_json::from_str(&segment.6).unwrap_or(serde_json::json!({})),
+    }))
+}
+</file>
+
+<file path="src/handlers/olds/favorites.rs">
+use axum::Json;
+use axum::http::StatusCode;
+use axum::{
+    extract::{State},
+    response::Result,
+};
+use rust_decimal::Decimal;
+use rust_decimal::prelude::ToPrimitive;
+use sqlx::{PgPool, Row};
+
+use crate::models::*;
+
+pub async fn toggle_favorite(  
+    claims: Claims,  
+    State(pool): State<PgPool>,  
+    Json(payload): Json<FavoriteRequest>,  
+) -> Result<(), StatusCode> {  
+    let profile_id: Option<uuid::Uuid> = sqlx::query_scalar(  
+        "SELECT id FROM profiles WHERE user_id = $1 LIMIT 1"  
+    )  
+    .bind(claims.sub)  
+    .fetch_optional(&pool)  
+    .await  
+    .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;  
+
+    let profile_id = match profile_id {  
+        Some(id) => id,  
+        None => {  
+            sqlx::query_scalar::<_, uuid::Uuid>(  
+                "INSERT INTO profiles (user_id, name) VALUES ($1, $2) RETURNING id"  
+            )  
+            .bind(claims.sub)  
+            .bind("Default Profile")  
+            .fetch_one(&pool)  
+            .await  
+            .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?  
+        }  
+    };  
+
+    // Check if already favorited  
+    let exists: bool = sqlx::query_scalar(  
+        "SELECT EXISTS(SELECT 1 FROM favorites WHERE profile_id = $1 AND movie_id = $2)"  
+    )  
+    .bind(profile_id)  
+    .bind(payload.movie_id)  
+    .fetch_one(&pool)  
+    .await  
+    .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;  
+
+    if exists {  
+        // Remove favorite  
+        sqlx::query!(  
+            "DELETE FROM favorites WHERE profile_id = $1 AND movie_id = $2",  
+            profile_id,  
+            payload.movie_id  
+        )  
+        .execute(&pool)  
+        .await  
+        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;  
+    } else {  
+        // Add favorite  
+        sqlx::query!(  
+            "INSERT INTO favorites (profile_id, movie_id) VALUES ($1, $2)",  
+            profile_id,  
+            payload.movie_id  
+        )  
+        .execute(&pool)  
+        .await  
+        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;  
+    }  
+
+    Ok(())  
+}  
+
+pub async fn get_favorites(  
+    claims: crate::models::Claims,  
+    State(pool): State<PgPool>,  
+) -> Result<Json<Vec<MovieDetailDto>>, StatusCode> {  
+    let profile_id: Option<uuid::Uuid> = sqlx::query_scalar(  
+        "SELECT id FROM profiles WHERE user_id = $1 LIMIT 1"  
+    )  
+    .bind(claims.sub)  
+    .fetch_optional(&pool)  
+    .await  
+    .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;  
+
+    let profile_id = profile_id.ok_or(StatusCode::NOT_FOUND)?;  
+
+    let rows = sqlx::query(  
+        r#"SELECT m.id, m.title, m.status, m.duration_seconds, m.genre, m.director, m.release_year, m.rating, m.description  
+           FROM movies m  
+           JOIN favorites f ON m.id = f.movie_id  
+           WHERE f.profile_id = $1 AND m.status = 'completed'  
+           ORDER BY f.created_at DESC"#  
+    )  
+    .bind(profile_id)  
+    .fetch_all(&pool)  
+    .await  
+    .unwrap_or_default();  
+
+    let movies = rows  
+        .into_iter()  
+        .map(|row| {  
+            let title: String = row.get(1);  
+            let rating = row.get::<Option<Decimal>, _>(7).map(|r| r.to_f64().unwrap_or(0.0));
+            MovieDetailDto {  
+                id: row.get(0),  
+                title: title.clone(),  
+                stream_url: format!(  
+                    "http://localhost:3000/streams/{}/master.m3u8",  
+                    title  
+                ),  
+                status: row.get(2),  
+                duration: format!("{} min", row.get::<i32, _>(3) / 60),  
+                thumbnail_url: format!(  
+                    "http://localhost:3000/streams/{}/thumbnail.jpg",  
+                    title  
+                ),  
+                genre: row.get(4),  
+                director: row.get(5),  
+                release_year: row.get(6),  
+                rating: rating,  
+                description: row.get(8),  
+            }  
+        })  
+        .collect();  
+
+    Ok(Json(movies))  
+}
+</file>
+
+<file path="src/handlers/olds/movie.rs">
+use axum::Json;
+use axum::extract::{Path, Query};
+use axum::http::StatusCode;
+use axum::{
+    extract::{Multipart, State},
+    response::Result,
+};
+use rust_decimal::Decimal;
+use rust_decimal::prelude::ToPrimitive;
+use sqlx::{PgPool, Row};
+
+use crate::models::*;
+
+pub async fn get_movies(State(pool): State<PgPool>) -> Result<Json<Vec<MovieDto>>> {
+    let rows = sqlx::query(
+        "SELECT id, title, status, duration_seconds FROM movies WHERE status = 'completed' ORDER BY created_at DESC",
+    )
+    .fetch_all(&pool)
+    .await
+    .unwrap_or_default();
+
+    let movies = rows
+        .into_iter()
+        .map(|row| MovieDto {
+            id: row.get(0),
+            title: row.get(1),
+            stream_url: format!(
+                "http://localhost:3000/streams/{}/master.m3u8",
+                row.get::<String, _>(1)
+            ),
+            status: row.get(2),
+            duration: format!("{} min", row.get::<i32, _>(3) / 60),
+            thumbnail_url: format!(
+                "http://localhost:3000/streams/{}/thumbnail.jpg",
+                row.get::<String, _>(1)
+            ),
+        })
+        .collect();
+
+    Ok(axum::Json(movies))
+}
+
+pub async fn upload_movie(
+    State(_pool): State<PgPool>,
+    mut multipart: Multipart,
+) -> Result<Json<serde_json::Value>, StatusCode> {
+    while let Some(field) = multipart
+        .next_field()
+        .await
+        .map_err(|_| StatusCode::BAD_REQUEST)?
+    {
+        let filename = field
+            .file_name()
+            .ok_or(StatusCode::BAD_REQUEST)?
+            .to_string();
+
+        let bytes = field
+            .bytes()
+            .await
+            .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+
+        // Save file
+        let path = format!("./uploads/{}", filename);
+        std::fs::write(&path, bytes).map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+
+        println!("📤 Uploaded: {}", filename);
+    }
+
+    Ok(Json(serde_json::json!({"message": "Upload successful"})))
+}
+
+pub async fn search_movies(  
+    State(pool): State<PgPool>,  
+    Query(params): Query<SearchQuery>,  
+) -> Result<Json<Vec<MovieDetailDto>>> {  
+    let mut query = String::from(  
+        "SELECT id, title, status, duration_seconds, genre, director, release_year, rating, description  
+         FROM movies WHERE status = 'completed'"  
+    );
+
+    // Add search filters  
+    if let Some(search_term) = &params.q {  
+        let safe_term = search_term.replace("'", "''");  
+        query.push_str(&format!(  
+            " AND (title ILIKE '%{}%' OR director ILIKE '%{}%' OR description ILIKE '%{}%')",  
+            safe_term, safe_term, safe_term  
+        ));  
+    }  
+
+    if let Some(genre_filter) = &params.genre {  
+        let safe_genre = genre_filter.replace("'", "''");  
+        query.push_str(&format!(" AND genre ILIKE '%{}%'", safe_genre));  
+    }  
+
+    // Add sorting  
+    match params.sort.as_deref() {  
+        Some("recent") => query.push_str(" ORDER BY created_at DESC"),  
+        Some("rating") => query.push_str(" ORDER BY rating DESC"),  
+        Some("title") => query.push_str(" ORDER BY title ASC"),  
+        _ => query.push_str(" ORDER BY created_at DESC"),  
+    }  
+
+    let rows = sqlx::query(&query)  
+        .fetch_all(&pool)  
+        .await  
+        .unwrap_or_default();  
+
+    let movies = rows  
+        .into_iter()  
+        .map(|row| {  
+            let title: String = row.get(1);  
+
+            let rating = row.get::<Option<Decimal>, _>(7).map(|r| r.to_f64().unwrap_or(0.0));
+
+            MovieDetailDto {  
+                id: row.get(0),  
+                title: title.clone(),  
+                stream_url: format!(  
+                    "http://localhost:3000/streams/{}/master.m3u8",  
+                    title  
+                ),  
+                status: row.get(2),  
+                duration: format!("{} min", row.get::<i32, _>(3) / 60),  
+                thumbnail_url: format!(  
+                    "http://localhost:3000/streams/{}/thumbnail.jpg",  
+                    title  
+                ),  
+                genre: row.get(4),  
+                director: row.get(5),  
+                release_year: row.get(6),  
+                rating: rating,  
+                description: row.get(8),  
+            }  
+        })  
+        .collect();  
+
+    Ok(Json(movies))  
+}  
+
+pub async fn get_movie_detail(  
+    State(pool): State<PgPool>,  
+    Path(movie_id): Path<uuid::Uuid>,  
+) -> Result<Json<MovieDetailDto>, StatusCode> {  
+    let row = sqlx::query(  
+        "SELECT id, title, status, duration_seconds, genre, director, release_year, rating, description   
+         FROM movies WHERE id = $1"  
+    )  
+    .bind(movie_id)  
+    .fetch_one(&pool)  
+    .await  
+    .map_err(|_| StatusCode::NOT_FOUND)?;  
+
+    let title: String = row.get(1);  
+    let movie = MovieDetailDto {  
+        id: row.get(0),  
+        title: title.clone(),  
+        stream_url: format!(  
+            "http://localhost:3000/streams/{}/master.m3u8",  
+            title  
+        ),  
+        status: row.get(2),  
+        duration: format!("{} min", row.get::<i32, _>(3) / 60),  
+        thumbnail_url: format!(  
+            "http://localhost:3000/streams/{}/thumbnail.jpg",  
+            title  
+        ),  
+        genre: row.get(4),  
+        director: row.get(5),  
+        release_year: row.get(6),  
+        rating: row.get(7),  
+        description: row.get(8),  
+    };  
+
+    Ok(Json(movie))  
+}
+</file>
+
+<file path="src/handlers/olds/user.rs">
+use axum::{Json, extract::State, http::StatusCode, response::IntoResponse};
+use bcrypt::{DEFAULT_COST, hash, verify};
+use chrono::{Duration, Utc};
+use jsonwebtoken::{EncodingKey, Header, encode};
+use sqlx::PgPool;
+
+use crate::models::*;
+
+mod validators {
+    pub fn validate_email(email: &str) -> Result<(), String> {
+        // Simple email validation
+        if email.contains('@') && email.contains('.') && email.len() > 5 {
+            Ok(())
+        } else {
+            Err("Invalid email format".to_string())
+        }
+    }
+    pub fn validate_password(password: &str) -> Result<(), String> {
+        if password.len() < 8 {
+            return Err("Password must be at least 8 characters".to_string());
+        }
+        if !password.chars().any(|c| c.is_uppercase()) {
+            return Err("Password must contain at least one uppercase letter".to_string());
+        }
+        if !password.chars().any(|c| c.is_digit(10)) {
+            return Err("Password must contain at least one number".to_string());
+        }
+        Ok(())
+    }
+}
+
+// Match this with auth_extractor.rs
+const SECRET_KEY: &[u8] = b"secret_key";
+
+pub async fn register(
+    State(pool): State<PgPool>,
+    Json(payload): Json<RegisterRequest>,
+) -> Result<impl IntoResponse, StatusCode> {
+    // Validate input
+    validators::validate_email(&payload.email).map_err(|_| StatusCode::BAD_REQUEST)?;
+    validators::validate_password(&payload.password).map_err(|_| StatusCode::BAD_REQUEST)?;
+
+    // 1. Hash the password
+    let hashed =
+        hash(payload.password, DEFAULT_COST).map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+
+    // 2. Save to DB
+    sqlx::query!(
+        "INSERT INTO users (email, password_hash) VALUES ($1, $2)",
+        payload.email,
+        hashed
+    )
+    .execute(&pool)
+    .await
+    .map_err(|_| StatusCode::CONFLICT)?; // Email already exists
+
+    Ok(StatusCode::CREATED)
+}
+
+pub async fn login(
+    State(pool): State<PgPool>,
+    Json(payload): Json<LoginRequest>,
+) -> Result<Json<AuthResponse>, StatusCode> {
+    let user = sqlx::query!(
+        "SELECT id, password_hash FROM users WHERE email = $1",
+        payload.email
+    )
+    .fetch_one(&pool)
+    .await
+    .map_err(|_| StatusCode::UNAUTHORIZED)?;
+
+    let is_valid = verify(payload.password, &user.password_hash)
+        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+
+    if !is_valid {
+        return Err(StatusCode::UNAUTHORIZED);
+    }
+
+    // Generate JWT
+    let claims = Claims {
+        sub: user.id,
+        exp: (Utc::now() + Duration::hours(24)).timestamp(),
+    };
+
+    let token = encode(
+        &Header::default(),
+        &claims,
+        &EncodingKey::from_secret(SECRET_KEY),
+    )
+    .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+
+    Ok(Json(AuthResponse {
+        token,
+        token_type: "Bearer".to_string(),
+    }))
+}
+
+pub async fn get_user_profile(
+    claims: Claims,
+    State(pool): State<PgPool>,
+) -> Result<Json<UserProfile>, StatusCode> {
+    let user = sqlx::query!(
+        "SELECT id, email, created_at FROM users WHERE id = $1",
+        claims.sub
+    )
+    .fetch_one(&pool)
+    .await
+    .map_err(|_| StatusCode::NOT_FOUND)?;
+
+    Ok(Json(UserProfile {
+        id: user.id,
+        email: user.email,
+        created_at: user.created_at.expect("created_at should not be null"),
+    }))
+}
+</file>
+
+<file path="src/handlers/olds/watch_history.rs">
+use axum::Json;
+use axum::http::StatusCode;
+use axum::{
+    extract::{State},
+    response::Result,
+};
+use rust_decimal::Decimal;
+use rust_decimal::prelude::ToPrimitive;
+use sqlx::{PgPool, Row};
+
+use crate::models::*;
+
+pub async fn save_watch_progress(  
+    claims: Claims,  
+    State(pool): State<PgPool>,  
+    Json(payload): Json<WatchProgressDto>,  
+) -> Result<(), StatusCode> {  
+    // Get profile_id for this user  
+    let profile_id: Option<uuid::Uuid> = sqlx::query_scalar(  
+        "SELECT id FROM profiles WHERE user_id = $1 LIMIT 1"  
+    )  
+    .bind(claims.sub)  
+    .fetch_optional(&pool)  
+    .await  
+    .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;  
+
+    let profile_id = match profile_id {  
+        Some(id) => id,  
+        None => {  
+            // Create default profile if doesn't exist  
+            sqlx::query_scalar::<_, uuid::Uuid>(  
+                "INSERT INTO profiles (user_id, name) VALUES ($1, $2) RETURNING id"  
+            )  
+            .bind(claims.sub)  
+            .bind("Default Profile")  
+            .fetch_one(&pool)  
+            .await  
+            .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?  
+        }  
+    };  
+
+    sqlx::query!(  
+        r#"INSERT INTO watch_history (profile_id, movie_id, last_position_seconds, completed, watched_at, updated_at)  
+           VALUES ($1, $2, $3, $4, NOW(), NOW())  
+           ON CONFLICT(profile_id, movie_id)   
+           DO UPDATE SET last_position_seconds = $3, completed = $4, updated_at = NOW()"#,  
+        profile_id,  
+        payload.movie_id,  
+        payload.position_seconds,  
+        payload.completed  
+    )  
+    .execute(&pool)  
+    .await  
+    .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;  
+
+    Ok(())  
+}  
+
+pub async fn get_watch_history(  
+    claims: Claims,  
+    State(pool): State<PgPool>,  
+) -> Result<Json<Vec<MovieDetailDto>>, StatusCode> {  
+    let profile_id: Option<uuid::Uuid> = sqlx::query_scalar(  
+        "SELECT id FROM profiles WHERE user_id = $1 LIMIT 1"  
+    )  
+    .bind(claims.sub)  
+    .fetch_optional(&pool)  
+    .await  
+    .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;  
+
+    let profile_id = profile_id.ok_or(StatusCode::NOT_FOUND)?;  
+
+    let rows = sqlx::query(  
+        r#"SELECT m.id, m.title, m.status, m.duration_seconds, m.genre, m.director, m.release_year, m.rating, m.description  
+           FROM movies m  
+           JOIN watch_history wh ON m.id = wh.movie_id  
+           WHERE wh.profile_id = $1 AND m.status = 'completed'  
+           ORDER BY wh.updated_at DESC  
+           LIMIT 20"#  
+    )  
+    .bind(profile_id)  
+    .fetch_all(&pool)  
+    .await  
+    .unwrap_or_default();  
+
+    let movies = rows  
+        .into_iter()  
+        .map(|row| {  
+            let title: String = row.get(1);  
+            let rating = row.get::<Option<Decimal>, _>(7).map(|r| r.to_f64().unwrap_or(0.0));   
+            MovieDetailDto {  
+                id: row.get(0),  
+                title: title.clone(),  
+                stream_url: format!(  
+                    "http://localhost:3000/streams/{}/master.m3u8",  
+                    title  
+                ),  
+                status: row.get(2),  
+                duration: format!("{} min", row.get::<i32, _>(3) / 60),  
+                thumbnail_url: format!(  
+                    "http://localhost:3000/streams/{}/thumbnail.jpg",  
+                    title  
+                ),  
+                genre: row.get(4),  
+                director: row.get(5),  
+                release_year: row.get(6),  
+                rating: rating,  
+                description: row.get(8),  
+            }  
+        })  
+        .collect();  
+
+    Ok(Json(movies))  
+}
+</file>
+
+<file path="src/handlers/user/handler.rs">
+use std::sync::Arc;
+
+use axum::{Json, extract::State, http::StatusCode, response::IntoResponse};
+use bcrypt::{DEFAULT_COST, hash, verify};
+use chrono::{Duration, Utc};
+use jsonwebtoken::{EncodingKey, Header, encode};
+use sqlx::PgPool;
+
+use crate::{
+    domains::{Profile, User},
+    dtos::{map_profile_to_response, user_dto::*},
+    handlers::user::validators::validators,
+    models::Claims,
+};
+
+const SECRET_KEY: &[u8] = b"secret_key";
+
+/// Register a new user  
+pub async fn register(
+    State(pool): State<Arc<PgPool>>,
+    Json(payload): Json<RegisterRequest>,
+) -> Result<impl IntoResponse, StatusCode> {
+    validators::validate_email(&payload.email).map_err(|_| StatusCode::BAD_REQUEST)?;
+    validators::validate_password(&payload.password).map_err(|_| StatusCode::BAD_REQUEST)?;
+
+    let hashed =
+        hash(&payload.password, DEFAULT_COST).map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+
+    sqlx::query!(
+        "INSERT INTO users (email, password_hash) VALUES ($1, $2)",
+        payload.email,
+        hashed
+    )
+    .execute(pool.as_ref())
+    .await
+    .map_err(|_| StatusCode::CONFLICT)?;
+
+    Ok(StatusCode::CREATED)
+}
+
+/// Login user and return JWT token  
+pub async fn login(
+    State(pool): State<Arc<PgPool>>,
+    Json(payload): Json<LoginRequest>,
+) -> Result<Json<AuthResponse>, StatusCode> {
+    let user: User =
+        sqlx::query_as::<_, User>("SELECT id, password_hash FROM users WHERE email = $1")
+            .bind(payload.email)
+            .fetch_one(pool.as_ref())
+            .await
+            .map_err(|_| StatusCode::UNAUTHORIZED)?;
+
+    let is_valid = verify(&payload.password, &user.password_hash)
+        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+
+    if !is_valid {
+        return Err(StatusCode::UNAUTHORIZED);
+    }
+
+    let claims = Claims {
+        sub: user.id,
+        exp: (Utc::now() + Duration::hours(24)).timestamp(),
+    };
+
+    let token = encode(
+        &Header::default(),
+        &claims,
+        &EncodingKey::from_secret(SECRET_KEY),
+    )
+    .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+
+    Ok(Json(AuthResponse {
+        token,
+        token_type: "Bearer".to_string(),
+    }))
+}
+
+/// Get current user profile  
+pub async fn get_user_profile(
+    claims: Claims,
+    State(pool): State<Arc<PgPool>>,
+) -> Result<Json<ProfileResponse>, StatusCode> {
+    let user = sqlx::query_as::<_, Profile>(
+        r#"
+        SELECT 
+           *
+        FROM profiles p
+        WHERE p.user_id = $1"#,
+    )
+    .bind(claims.sub)
+    .fetch_one(pool.as_ref())
+    .await
+    .map_err(|_| StatusCode::NOT_FOUND)?;
+
+    Ok(Json(map_profile_to_response(user)))
+}
+
+/// Create a profile for the user  
+pub async fn create_profile(
+    claims: Claims,
+    State(pool): State<Arc<PgPool>>,
+    Json(payload): Json<CreateProfileRequest>,
+) -> Result<Json<ProfileResponse>, StatusCode> {
+    let profile_id = sqlx::query_scalar::<_, uuid::Uuid>(
+        "INSERT INTO profiles (user_id, name, avatar_url) VALUES ($1, $2, $3) RETURNING id",
+    )
+    .bind(claims.sub)
+    .bind(&payload.name)
+    .bind(&payload.avatar_url)
+    .fetch_one(pool.as_ref())
+    .await
+    .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+
+    Ok(Json(ProfileResponse {
+        id: profile_id,
+        name: payload.name,
+        avatar_url: payload.avatar_url,
+        created_at: Utc::now(),
+    }))
+}
+</file>
+
+<file path="src/handlers/user/mod.rs">
+use std::sync::Arc;
+
+use axum::{
+    Router,
+    routing::{get, post},
+};
+use sqlx::PgPool;
+
+pub mod handler;
+pub mod validators;
+
+pub fn router(pool: Arc<PgPool>) -> Router {
+    Router::new()
+        .route("/register", post(handler::register))
+        .route("/login", post(handler::login))
+        .route("/profile", get(handler::get_user_profile))
+        .route("/profile/create", post(handler::create_profile))
+        .with_state(pool)
+}
+</file>
+
+<file path="src/handlers/user/validators.rs">
+pub mod validators {
+    pub fn validate_email(email: &str) -> Result<(), String> {
+        if email.contains('@') && email.contains('.') && email.len() > 5 {
+            Ok(())
+        } else {
+            Err("Invalid email format".to_string())
+        }
+    }
+
+    pub fn validate_password(password: &str) -> Result<(), String> {
+        if password.len() < 8 {
+            return Err("Password must be at least 8 characters".to_string());
+        }
+        if !password.chars().any(|c| c.is_uppercase()) {
+            return Err("Password must contain at least one uppercase letter".to_string());
+        }
+        if !password.chars().any(|c| c.is_digit(10)) {
+            return Err("Password must contain at least one number".to_string());
+        }
+        Ok(())
+    }
+}
+</file>
+
+<file path="src/handlers/watch_history/handler.rs">
+use std::sync::Arc;
+
+use axum::extract::Path;
+use axum::{Json, extract::State, http::StatusCode};
+use sqlx::PgPool;
+
+use crate::domains::WatchHistory;
+use crate::dtos::mappers::*;
+use crate::dtos::watch_history_dto::*;
+use crate::models::Claims;
+use crate::services::validation::RuleValidator;
+
+/// Save watch progress
+pub async fn save_watch_progress(
+    claims: Claims,
+    State(pool): State<Arc<PgPool>>,
+    Json(payload): Json<SaveWatchProgressRequest>,
+) -> Result<StatusCode, StatusCode> {
+    // Get profile_id for this user
+    let profile_id: Option<uuid::Uuid> =
+        sqlx::query_scalar("SELECT id FROM profiles WHERE user_id = $1 LIMIT 1")
+            .bind(claims.sub)
+            .fetch_optional(pool.as_ref())
+            .await
+            .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+
+    let profile_id = match profile_id {
+        Some(id) => id,
+        None => sqlx::query_scalar::<_, uuid::Uuid>(
+            "INSERT INTO profiles (user_id, name) VALUES ($1, $2) RETURNING id",
+        )
+        .bind(claims.sub)
+        .bind("Default Profile")
+        .fetch_one(pool.as_ref())
+        .await
+        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?,
+    };
+
+    sqlx::query!(
+        r#"INSERT INTO watch_history (profile_id, movie_id, last_position_seconds, completed, watched_at, updated_at)
+           VALUES ($1, $2, $3, $4, NOW(), NOW())
+           ON CONFLICT(profile_id, movie_id)
+           DO UPDATE SET last_position_seconds = $3, completed = $4, updated_at = NOW()"#,
+        profile_id,
+        payload.movie_id,
+        payload.position_seconds,
+        payload.completed
+    )
+    .execute(pool.as_ref())
+    .await
+    .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+
+    Ok(StatusCode::CREATED)
+}
+
+/// Save enhanced watch progress with metadata
+pub async fn save_enhanced_watch_progress(
+    claims: Claims,
+    State(pool): State<Arc<PgPool>>,
+    Json(payload): Json<EnhancedWatchProgressRequest>,
+) -> Result<StatusCode, StatusCode> {
+    // Get profile_id
+    let profile_id: Option<uuid::Uuid> =
+        sqlx::query_scalar("SELECT id FROM profiles WHERE user_id = $1 LIMIT 1")
+            .bind(claims.sub)
+            .fetch_optional(pool.as_ref())
+            .await
+            .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+
+    let profile_id = match profile_id {
+        Some(id) => id,
+        None => sqlx::query_scalar::<_, uuid::Uuid>(
+            "INSERT INTO profiles (user_id, name) VALUES ($1, $2) RETURNING id",
+        )
+        .bind(claims.sub)
+        .bind("Default Profile")
+        .fetch_one(pool.as_ref())
+        .await
+        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?,
+    };
+
+    // Validate data
+    RuleValidator::validate_device_type(&payload.device_type)
+        .map_err(|_| StatusCode::BAD_REQUEST)?;
+
+    let playback_speed = RuleValidator::validate_playback_speed(payload.playback_speed)
+        .map_err(|_| StatusCode::BAD_REQUEST)?;
+
+    RuleValidator::validate_interrupt_count(payload.interrupted_count)
+        .map_err(|_| StatusCode::BAD_REQUEST)?;
+
+    // Calculate completion percentage
+    let completion_percentage = RuleValidator::calculate_completion_percentage(
+        payload.watch_duration_seconds,
+        payload.total_movie_duration_seconds,
+    );
+
+    let completion_reason =
+        RuleValidator::determine_completion_reason(payload.completed, completion_percentage);
+
+    // Save watch history with metadata
+    sqlx::query(
+        r#"INSERT INTO watch_history
+           (profile_id, movie_id, watch_duration_seconds, total_movie_duration_seconds,
+            completion_percentage, watch_quality, interrupted_count, playback_speed,
+            device_type, completion_reason, watched_at, updated_at)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, NOW(), NOW())
+        ON CONFLICT(profile_id, movie_id)
+        DO UPDATE SET
+            watch_duration_seconds = $3,
+            total_movie_duration_seconds = $4,
+            completion_percentage = $5,
+            interrupted_count = $7,
+            playback_speed = $8,
+            device_type = $9,
+            completion_reason = $10,
+            updated_at = NOW()"#,
+    )
+    .bind(profile_id)
+    .bind(payload.movie_id)
+    .bind(payload.watch_duration_seconds)
+    .bind(payload.total_movie_duration_seconds)
+    .bind(completion_percentage)
+    .bind(&payload.watch_quality)
+    .bind(payload.interrupted_count)
+    .bind(playback_speed)
+    .bind(&payload.device_type)
+    .bind(&completion_reason)
+    .execute(pool.as_ref())
+    .await
+    .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+
+    Ok(StatusCode::CREATED)
+}
+
+/// Get watch history for current user
+pub async fn get_watch_histories(
+    claims: Claims,
+    State(pool): State<Arc<PgPool>>,
+) -> Result<Json<Vec<WatchHistoryResponse>>, StatusCode> {
+    let profile_id: Option<uuid::Uuid> =
+        sqlx::query_scalar("SELECT id FROM profiles WHERE user_id = $1 LIMIT 1")
+            .bind(claims.sub)
+            .fetch_optional(pool.as_ref())
+            .await
+            .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+
+    let profile_id = profile_id.ok_or(StatusCode::NOT_FOUND)?;
+
+    let histories = sqlx::query_as::<_, WatchHistory>(
+        "SELECT id, movie_id, last_position_seconds, completed, watched_at FROM watch_history WHERE profile_id = $1 ORDER BY updated_at DESC LIMIT 50",
+    )
+    .bind(profile_id)
+    .fetch_all(pool.as_ref())
+    .await
+    .unwrap_or_default();
+
+    let responses = histories
+        .into_iter()
+        .map(map_watch_history_to_response)
+        .collect();
+
+    Ok(Json(responses))
+}
+
+/// Get watch history for current user
+pub async fn get_watch_history(
+    claims: Claims,
+    State(pool): State<Arc<PgPool>>,
+    Path(history_id): Path<uuid::Uuid>,
+) -> Result<Json<WatchHistoryDetailResponse>, StatusCode> {
+    let profile_id: Option<uuid::Uuid> =
+        sqlx::query_scalar("SELECT id FROM profiles WHERE user_id = $1 LIMIT 1")
+            .bind(claims.sub)
+            .fetch_optional(pool.as_ref())
+            .await
+            .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+
+    let profile_id = profile_id.ok_or(StatusCode::NOT_FOUND)?;
+
+    let history = sqlx::query_as::<_, WatchHistory>(
+        "SELECT * FROM watch_history WHERE profile_id = $1 AND id = $2",
+    )
+    .bind(profile_id)
+    .bind(history_id)
+    .fetch_one(pool.as_ref())
+    .await
+    .map_err(|_| StatusCode::NOT_FOUND)?;
+
+    Ok(Json(map_watch_history_to_detail_response(history)))
+}
+</file>
+
+<file path="src/handlers/watch_history/mod.rs">
+use std::sync::Arc;
+
+use axum::{
+    Router,
+    routing::{get, post},
+};
+use sqlx::PgPool;
+
+pub mod handler;
+
+pub fn router(pool: Arc<PgPool>) -> Router {
+    Router::new()
+        .route("/", get(handler::get_watch_histories))
+        .route("/{history_id}", get(handler::get_watch_history))
+        .route("/save", post(handler::save_watch_progress))
+        .route(
+            "/save-enhanced",
+            post(handler::save_enhanced_watch_progress),
+        )
+        .with_state(pool)
+}
+</file>
+
+<file path="src/handlers/mod.rs">
+pub mod analytics;
+pub mod favorites;
+pub mod movie;
+pub mod user;
+pub mod watch_history;
+
+pub use analytics::router as analytics_router;
+pub use favorites::router as favorites_router;
+pub use movie::router as movie_router;
+pub use user::router as user_router;
+pub use watch_history::router as watch_history_router;
+</file>
+
+<file path="src/middlewares/auth_extractor.rs">
+use axum::{
+    extract::FromRequestParts,
+    http::{StatusCode, header::AUTHORIZATION, request::Parts},
+};
+use jsonwebtoken::{DecodingKey, Validation, decode};
+
+use crate::models::Claims;
+
+// Secret key - move this to .env in production!
+const SECRET_KEY: &[u8] = b"secret_key";
+
+impl<S> FromRequestParts<S> for Claims
+where
+    S: Send + Sync,
+{
+    type Rejection = StatusCode;
+
+    async fn from_request_parts(parts: &mut Parts, _state: &S) -> Result<Self, Self::Rejection> {
+        // 1. Extract Bearer token from Authorization header
+        let auth_header = parts
+            .headers
+            .get(AUTHORIZATION)
+            .and_then(|h| h.to_str().ok())
+            .ok_or(StatusCode::UNAUTHORIZED)?;
+
+        // 2. Validate "Bearer " prefix
+        if !auth_header.starts_with("Bearer ") {
+            return Err(StatusCode::UNAUTHORIZED);
+        }
+
+        let token = &auth_header[7..]; // Strip "Bearer "
+
+        // 3. Decode and validate JWT
+        let token_data = decode::<Claims>(
+            token,
+            &DecodingKey::from_secret(SECRET_KEY),
+            &Validation::default(),
+        )
+        .map_err(|_| StatusCode::UNAUTHORIZED)?;
+
+        Ok(token_data.claims)
+    }
+}
+</file>
+
+<file path="src/middlewares/mod.rs">
+pub mod auth_extractor;
+pub mod security_headers;
+</file>
+
+<file path="src/middlewares/security_headers.rs">
+use axum::{extract::Request, http::HeaderValue, middleware::Next, response::Response};
+
+pub async fn add_security_headers(request: Request, next: Next) -> Response {
+    let mut response = next.run(request).await;
+
+    let headers = response.headers_mut();
+
+    // Prevent clickjacking
+    headers.insert("X-Frame-Options", HeaderValue::from_static("DENY"));
+
+    // Prevent MIME sniffing
+    headers.insert(
+        "X-Content-Type-Options",
+        HeaderValue::from_static("nosniff"),
+    );
+
+    // XSS protection
+    headers.insert(
+        "X-XSS-Protection",
+        HeaderValue::from_static("1; mode=block"),
+    );
+
+    // Referrer policy
+    headers.insert(
+        "Referrer-Policy",
+        HeaderValue::from_static("strict-origin-when-cross-origin"),
+    );
+
+    // CSP
+    headers.insert(
+        "Content-Security-Policy",
+        HeaderValue::from_static(
+            "default-src 'self'; \
+             script-src 'self' 'unsafe-inline'; \
+             style-src 'self' 'unsafe-inline'; \
+             img-src 'self' data: https:; \
+             media-src 'self' https:",
+        ),
+    );
+
+    // Force HTTPS
+    headers.insert(
+        "Strict-Transport-Security",
+        HeaderValue::from_static("max-age=31536000; includeSubDomains"),
+    );
+
+    // Disable caching sensitive data
+    headers.insert(
+        "Cache-Control",
+        HeaderValue::from_static("no-store, no-cache, must-revalidate"),
+    );
+
+    response
+}
+</file>
+
+<file path="src/models/analytics.rs">
+use chrono::{DateTime, NaiveDate, Utc};
+use serde::{Deserialize, Serialize};
+use utoipa::ToSchema;
+use uuid::Uuid;
+
+#[derive(Debug, Serialize, Deserialize, Copy, Clone, PartialEq, ToSchema)]
+pub enum InteractionType {
+    #[serde(rename = "watched")]
+    Watched,
+    #[serde(rename = "abandoned")]
+    Abandoned,
+    #[serde(rename = "sampled")]
+    Sampled,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone, ToSchema)]
+pub struct EnhancedWatchHistoryEntry {
+    pub id: Uuid,
+    pub profile_id: Uuid,
+    pub movie_id: Uuid,
+    pub watch_duration_seconds: i32,
+    pub total_movie_duration_seconds: i32,
+    pub completion_percentage: f64,
+    pub watch_quality: String,
+    pub interrupted_count: i32,
+    pub playback_speed: f64,
+    pub device_type: String,
+    pub completion_reason: String,
+    pub flagged_for_review: bool,
+    pub watched_at: DateTime<Utc>,
+    pub last_session_resumed_at: Option<DateTime<Utc>>,
+}
+
+// ============ DATA VALIDATION ============
+
+#[derive(Debug, Serialize, Deserialize, ToSchema)]
+pub struct WatchProgressRequest {
+    pub movie_id: Uuid,
+    pub watch_duration_seconds: i32,
+    pub total_movie_duration_seconds: i32,
+    pub watch_quality: String,
+    pub interrupted_count: i32,
+    pub playback_speed: f64,
+    pub device_type: String,
+    pub completed: bool,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct DataQualityFlag {
+    pub id: Uuid,
+    pub watch_history_id: Uuid,
+    pub flag_type: String,
+    pub flag_severity: String,
+    pub description: String,
+    pub resolved: bool,
+    pub created_at: DateTime<Utc>,
+}
+
+#[derive(Debug, Serialize, Deserialize, ToSchema)]
+pub struct QualityFlagResponse {
+    pub total_flags: i64,
+    pub critical_count: i64,
+    pub error_count: i64,
+    pub warning_count: i64,
+    pub resolution_rate: f64,
+}
+
+// ============ USER BEHAVIOR ============
+
+#[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
+pub struct UserBehaviorSnapshot {
+    pub id: Uuid,
+    pub profile_id: Uuid,
+    pub snapshot_date: NaiveDate,
+    pub movies_watched_period: i32,
+    pub total_watch_time_minutes: i32,
+    pub avg_completion_rate: f64,
+    pub preferred_genre: Option<String>,
+    pub preferred_time_of_day: Option<String>,
+    pub device_most_used: Option<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
+pub struct BehaviorAnalyticsResponse {
+    pub current_snapshot: UserBehaviorSnapshot,
+    pub previous_snapshot: Option<UserBehaviorSnapshot>,
+    pub trend: String, // "improving", "declining", "stable"
+    pub recommendation: String,
+}
+
+// ============ USER SEGMENTS ============
+
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, ToSchema)]
+pub enum UserSegmentType {
+    #[serde(rename = "binge_watcher")]
+    BingeWatcher,
+    #[serde(rename = "casual_viewer")]
+    CasualViewer,
+    #[serde(rename = "explorer")]
+    Explorer,
+    #[serde(rename = "weekend_warrior")]
+    WeekendWarrior,
+    #[serde(rename = "inactive")]
+    Inactive,
+    #[serde(rename = "general")]
+    General,
+}
+
+impl UserSegmentType {
+    pub fn as_str(&self) -> &str {
+        match self {
+            UserSegmentType::BingeWatcher => "BINGE_WATCHER",
+            UserSegmentType::CasualViewer => "CASUAL_VIEWER",
+            UserSegmentType::Explorer => "EXPLORER",
+            UserSegmentType::WeekendWarrior => "WEEKEND_WARRIOR",
+            UserSegmentType::Inactive => "INACTIVE",
+            UserSegmentType::General => "GENERAL",
+        }
+    }
+
+    pub fn from_str(s: &str) -> Self {
+        match s {
+            "BINGE_WATCHER" => UserSegmentType::BingeWatcher,
+            "CASUAL_VIEWER" => UserSegmentType::CasualViewer,
+            "EXPLORER" => UserSegmentType::Explorer,
+            "WEEKEND_WARRIOR" => UserSegmentType::WeekendWarrior,
+            "INACTIVE" => UserSegmentType::Inactive,
+            _ => UserSegmentType::General,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
+pub struct UserSegment {
+    pub id: Uuid,
+    pub profile_id: Uuid,
+    pub segment_type: String,
+    pub segment_score: f64,
+    pub last_calculated_at: DateTime<Utc>,
+    pub valid_until: DateTime<Utc>,
+    pub metadata: serde_json::Value,
+}
+
+#[derive(Debug, Serialize, Deserialize, ToSchema)]
+pub struct UserSegmentResponse {
+    pub segment_type: String,
+    pub segment_score: f64,
+    pub description: String,
+    pub characteristics: Vec<String>,
+    pub recommendations: Vec<String>,
+}
+
+// ============ ANALYTICS QUERIES ============
+
+#[derive(Debug, Serialize, ToSchema)]
+pub struct CompletionRateByGenre {
+    pub genre: String,
+    pub total_watches: i64,
+    pub avg_completion_rate: f64,
+    pub median_completion: f64,
+}
+
+#[derive(Debug, Serialize, ToSchema)]
+pub struct WatchTimePattern {
+    pub time_period: String,
+    pub watch_count: i64,
+    pub avg_completion: f64,
+}
+
+#[derive(Debug, Serialize, ToSchema)]
+pub struct DataQualityReport {
+    pub total_records: i64,
+    pub valid_records: i64,
+    pub flagged_records: i64,
+    pub validation_percentage: f64,
+    pub top_issues: Vec<(String, i64)>,
+}
+</file>
+
+<file path="src/models/mod.rs">
+mod analytics;
+mod movie;
+mod user;
+
+pub use analytics::*;
+pub use movie::*;
+pub use user::*;
+</file>
+
+<file path="src/models/movie.rs">
+use serde::{Deserialize, Serialize};
+use utoipa::{IntoParams, ToSchema};
+use uuid::Uuid;
+
+#[derive(Debug, Serialize, Deserialize, Clone, Copy, PartialEq, sqlx::Type, ToSchema)]
+#[sqlx(type_name = "movie_status", rename_all = "lowercase")]
+pub enum MovieStatus {
+    #[serde(rename = "pending")]
+    Pending,
+    #[serde(rename = "processing")]
+    Processing,
+    #[serde(rename = "completed")]
+    Completed,
+    #[serde(rename = "failed")]
+    Failed,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone, ToSchema)]
+pub struct MovieDto {
+    pub id: Uuid,
+    pub title: String,
+    pub stream_url: String, // This will point to our static file server
+    pub status: MovieStatus,
+    pub duration: String,
+    pub thumbnail_url: String,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone, ToSchema)]
+pub struct MovieDetailDto {
+    pub id: Uuid,
+    pub title: String,
+    pub stream_url: String,
+    pub status: MovieStatus,
+    pub duration: String,
+    pub thumbnail_url: String,
+    pub genre: Option<String>,
+    pub director: Option<String>,
+    pub release_year: Option<i32>,
+    pub rating: Option<f64>,
+    pub description: Option<String>,
+}
+
+// Watch Progress DTO
+#[derive(Debug, Serialize, Deserialize, ToSchema)]
+pub struct WatchProgressDto {
+    pub movie_id: Uuid,
+    pub position_seconds: i32,
+    pub completed: bool,
+}
+
+// Search Query
+#[derive(Debug, Deserialize, IntoParams)]
+pub struct SearchQuery {
+    pub q: Option<String>,
+    pub genre: Option<String>,
+    pub sort: Option<String>, // recent, rating, title
+}
+
+// Favorite Request
+#[derive(Debug, Serialize, Deserialize, ToSchema)]
+pub struct FavoriteRequest {
+    pub movie_id: Uuid,
+}
+</file>
+
+<file path="src/models/user.rs">
+use serde::{Deserialize, Serialize};
+use utoipa::ToSchema;
+
+#[derive(Deserialize, Serialize, ToSchema)]
+pub struct RegisterRequest {
+    pub email: String,
+    pub password: String,
+}
+
+#[derive(Debug, Serialize, Deserialize, ToSchema)]
+pub struct Claims {
+    pub sub: uuid::Uuid, // User ID
+    pub exp: i64,        // Expiration timestamp
+}
+
+#[derive(Serialize, ToSchema)]
+pub struct AuthResponse {
+    pub token: String,
+    pub token_type: String,
+}
+
+#[derive(Debug, Serialize, Deserialize, ToSchema)]
+pub struct LoginRequest {
+    pub email: String,
+    pub password: String,
+}
+
+#[derive(Debug, Serialize, Deserialize, ToSchema)]
+pub struct UserProfile {
+    pub id: uuid::Uuid,
+    pub email: String,
+    pub created_at: chrono::DateTime<chrono::Utc>,
+}
+</file>
+
+<file path="src/runner/handler.rs">
+use axum::response::Result;
+use std::{
+    path::{Path, PathBuf},
+    process::ExitStatus,
+};
+use tokio::process::Command;
+
+use notify_debouncer_full::DebouncedEvent;
+
+pub async fn handle_event_async(pool: sqlx::PgPool, event: DebouncedEvent, output_base: String) {
+    for path in &event.paths {
+        if path.exists() && path.extension().map_or(false, |ext| ext == "mp4") {
+            println!("🎬 New movie detected: {:?}", path);
+            println!(
+                "📊 File size: {:.2} MB",
+                std::fs::metadata(path)
+                    .map(|m| m.len() as f64 / 1_000_000 as f64)
+                    .unwrap_or(0.0)
+            );
+
+            if let Err(e) = process_movie_lifecycle(&pool, path.clone(), &output_base).await {
+                eprintln!("❌ Error processing movie: {}", e);
+            }
+        }
+    }
+}
+async fn process_movie_lifecycle(
+    pool: &sqlx::PgPool,
+    path: PathBuf,
+    output_base: &str,
+) -> Result<(), Box<dyn std::error::Error>> {
+    let title = path.file_stem().unwrap().to_str().unwrap().to_string();
+    let movie_output = format!("{}/{}", output_base, title);
+    let hls_index = format!("{}/master.m3u8", movie_output);
+    let original_path = path.to_str().unwrap().to_string();
+    // 1. Database: Mark as Processing
+    let movie_id: uuid::Uuid = sqlx::query_scalar!(
+        r#"
+        INSERT INTO movies (title, original_path, status)
+        VALUES ($1, $2, 'processing')
+        RETURNING id
+        "#,
+        title,
+        original_path,
+    )
+    .fetch_one(pool)
+    .await?;
+
+    println!("📝 Created movie record: {}", movie_id);
+
+    // 2. Transcode: Non-blocking
+    println!("⏳ Starting transcode...");
+    let status = run_transcode(&path, &movie_output).await?; // Notice the .await here!
+
+    if !status.success() {
+        return Err("Transcoding failed".into());
+    }
+
+    println!("✅ Transcoding completed");
+    // 3. Generate thumbnail
+    println!("🖼️ Generating thumbnail...");
+    let _ = run_thumbnail(&path, &movie_output).await?;
+    println!("✅ Thumbnail generated");
+
+    // 4. Get duration
+    println!("⏱️ Extracting duration...");
+    let duration = get_duration(&path).await?;
+    println!("✅ Duration: {} seconds", duration);
+
+    // 5. Database: Mark as Completed
+    sqlx::query!(
+            r#"UPDATE movies SET status = 'completed', hls_path = $1, thumbnail_path = $2, duration_seconds = $3 WHERE id = $4"#,
+            hls_index,
+            format!("{}/thumbnail.jpg", movie_output),
+            duration,
+            movie_id
+        )
+        .execute(pool)
+        .await?;
+    println!("✅ {} is ready for streaming!", title);
+
+    Ok(())
+}
+
+async fn run_transcode(
+    input: &Path,
+    output_folder: &str,
+) -> Result<ExitStatus, Box<dyn std::error::Error>> {
+    println!("Starting transcoding for: {:?}", input);
+
+    std::fs::create_dir_all(output_folder).unwrap();
+
+    let status = Command::new("ffmpeg")
+        .args([
+            // Input
+            "-i",
+            input.to_str().unwrap(),
+            // Video codec (Apple Silicon hardware)
+            // "-c:v",
+            // "hevc_videotoolbox",
+            "-q:v",
+            "85",
+            "-allow_sw",
+            "1",
+            // Keyframe settings
+            "-keyint_min",
+            "48",
+            "-g",
+            "48",
+            "-sc_threshold",
+            "0",
+            "-pix_fmt",
+            "yuv420p",
+            // Quality Variant 1 (1080p)
+            "-map",
+            "0:v",
+            "-map",
+            "0:a",
+            "-s:v:0",
+            "1920x1080",
+            "-b:v:0",
+            "5000k",
+            // Quality Variant 2 (720p)
+            // "-map",
+            // "0:v",
+            // "-map",
+            // "0:a",
+            // "-s:v:1",
+            // "1280x720",
+            // "-b:v:1",
+            // "2800k",
+            // Quality Variant 3 (480p)
+            // "-map",
+            // "0:v",
+            // "-map",
+            // "0:a",
+            // "-s:v:2",
+            // "854x480",
+            // "-b:v:2",
+            // "1400k",
+            // Audio codec
+            "-c:a",
+            "aac",
+            "-b:a",
+            "128k",
+            // HLS output format
+            "-start_number",
+            "0",
+            "-f",
+            "hls",
+            "-hls_time",
+            "10",
+            "-hls_list_size",
+            "0",
+            "-master_pl_name",
+            "master.m3u8",
+            "-var_stream_map",
+            // "v:0,a:0 v:1,a:1 v:2,a:2",
+            "v:0,a:0",
+            &format!("{}/stream_%v.m3u8", output_folder),
+        ])
+        .status()
+        .await?;
+
+    if status.success() {
+        println!("Transcoding completed successfully for: {:?}", input);
+    } else {
+        eprintln!(
+            "Transcoding failed for: {:?} with status: {:?}",
+            input, status
+        );
+    }
+
+    Ok(status)
+}
+
+async fn run_thumbnail(
+    input: &Path,
+    output_folder: &str,
+) -> Result<ExitStatus, Box<dyn std::error::Error>> {
+    println!("Starting thumbnail generation for: {:?}", input);
+
+    std::fs::create_dir_all(output_folder).unwrap();
+
+    let status = Command::new("ffmpeg")
+        .arg("-i")
+        .arg(input)
+        .arg("-ss")
+        .arg("00:00:05.000")
+        .arg("-vframes")
+        .arg("1")
+        .arg("-q:v")
+        .arg("2")
+        .arg(format!("{}/thumbnail.jpg", output_folder))
+        .status()
+        .await?;
+
+    if status.success() {
+        println!("Thumbnail generated successfully for: {:?}", input);
+    } else {
+        eprintln!(
+            "Thumbnail generation failed for: {:?} with status: {:?}",
+            input, status
+        );
+    }
+
+    Ok(status)
+}
+
+async fn get_duration(input: &Path) -> Result<i32, Box<dyn std::error::Error>> {
+    println!("Getting duration for: {:?}", input);
+
+    let output = Command::new("ffprobe")
+        .arg("-v")
+        .arg("error")
+        .arg("-show_entries")
+        .arg("format=duration")
+        .arg("-of")
+        .arg("default=noprint_wrappers=1:nokey=1")
+        .arg(input)
+        .output()
+        .await?;
+
+    if output.status.success() {
+        let duration = String::from_utf8_lossy(&output.stdout).trim().to_string();
+        let duration_secs: i32 = duration.parse::<f32>().unwrap_or(0.0) as i32;
+        println!("Duration for {:?}: {} seconds", input, duration);
+        Ok(duration_secs)
+    } else {
+        eprintln!(
+            "Failed to get duration for: {:?} with status: {:?}",
+            input, output.status
+        );
+        Err("Failed to get duration".into())
+    }
+}
+</file>
+
+<file path="src/runner/mod.rs">
+mod handler;
+pub mod runner;
+
+pub use handler::handle_event_async;
+pub use runner::Runner;
+</file>
+
+<file path="src/runner/runner.rs">
+use std::{sync::Arc, time::Duration};
+
+use notify_debouncer_full::{DebounceEventResult, new_debouncer, notify::RecursiveMode};
+use tokio::sync::mpsc;
+
+use crate::runner::handle_event_async;
+
+#[derive(Clone, Debug)]
+pub struct Runner {
+    pool: Arc<sqlx::PgPool>,
+    input_dir: String,
+    output_dir: String,
+}
+
+impl Runner {
+    pub fn new(pool: Arc<sqlx::PgPool>, input_dir: String, output_dir: String) -> Self {
+        Runner {
+            pool,
+            input_dir,
+            output_dir,
+        }
+    }
+
+    pub async fn start(&self) {
+        let (tx, mut rx) = mpsc::channel::<DebounceEventResult>(100);
+
+        let input_dir = self.input_dir.clone();
+        let output_dir = self.output_dir.clone();
+        let pool = self.pool.clone();
+
+        let watcher_handle = tokio::task::spawn_blocking(move || {
+            // 1. Initialize the Debouncer (2-second delay)
+            // This waits for the file to "stop changing" before firing the event
+            let mut debouncer = new_debouncer(
+                Duration::from_secs(2),
+                None,
+                move |result: DebounceEventResult| {
+                    if let Err(e) = tx.blocking_send(result) {
+                        eprintln!("Failed to send event to async task: {:?}", e);
+                    }
+                },
+            )
+            .unwrap();
+
+            // 2. Watch the input directory
+            debouncer
+                .watch(input_dir.clone(), RecursiveMode::NonRecursive)
+                .expect("Failed to start watcher");
+
+            println!("🚀 System active. Watching {}...", input_dir);
+
+            // The thread needs to stay alive to process events. A loop is typically used here,
+            // but for this simple example, we rely on the main function holding the runtime open.
+            // In a real application, you'd manage the lifecycle more robustly.
+            // The `debouncer` guard will stop the watcher when it's dropped.
+            // To keep it running, one option is to use a channel to signal when to stop the loop.
+            // We can use a trick to keep the debouncer in scope:
+            loop {
+                std::thread::sleep(Duration::from_secs(1));
+            }
+        });
+
+        while let Some(result) = rx.recv().await {
+            match result {
+                Ok(events) => {
+                    for event in events {
+                        let p = pool.clone().as_ref().clone();
+                        let out = output_dir.clone();
+                        tokio::spawn(async move {
+                            handle_event_async(p, event, out).await;
+                        });
+                    }
+                }
+                Err(errors) => errors
+                    .iter()
+                    .for_each(|e| eprintln!("Watch error: {:?}", e)),
+            }
+        }
+
+        // Keep main alive without blocking the thread
+        watcher_handle.await.unwrap();
+    }
+}
+</file>
+
+<file path="src/services/analytics.rs">
+use sqlx::PgPool;
+
+use crate::dtos::analytics_dto::*;
+
+pub struct AnalyticsService;
+
+impl AnalyticsService {
+    pub async fn get_completion_rate_by_genre(
+        pool: &PgPool,
+    ) -> Result<Vec<CompletionRateByGenre>, sqlx::Error> {
+        let rows = sqlx::query_as::<_, (String, i64, f64, f64)>(
+            r#"SELECT 
+                m.genre,  
+                COUNT(*) as total_watches,  
+                AVG(wh.completion_percentage) as avg_completion_rate,  
+                PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY wh.completion_percentage) as median  
+                FROM watch_history wh  
+               JOIN movies m ON wh.movie_id = m.id
+               WHERE wh.created_at > NOW() - INTERVAL '30 days'
+               GROUP BY m.genre
+               ORDER BY avg_completion_rate DESC"#,
+        )
+        .fetch_all(pool)
+        .await?;
+
+        Ok(rows
+            .into_iter()
+            .map(
+                |(genre, total_watches, avg_completion_rate, median_completion)| {
+                    CompletionRateByGenre {
+                        genre,
+                        total_watches,
+                        avg_completion_rate,
+                        median_completion,
+                    }
+                },
+            )
+            .collect())
+    }
+
+    pub async fn get_watch_patterns_by_time(
+        pool: &PgPool,
+    ) -> Result<Vec<WatchTimePattern>, sqlx::Error> {
+        let rows = sqlx::query_as::<_, (String, i64, f64)>(
+            r#"SELECT 
+                CASE   
+                    WHEN EXTRACT(HOUR FROM wh.watched_at) BETWEEN 6 AND 11 THEN 'morning'  
+                    WHEN EXTRACT(HOUR FROM wh.watched_at) BETWEEN 12 AND 16 THEN 'afternoon'  
+                    WHEN EXTRACT(HOUR FROM wh.watched_at) BETWEEN 17 AND 20 THEN 'evening'  
+                    ELSE 'night'  
+                END as time_period, 
+                COUNT(*) as watch_count,  
+                AVG(wh.completion_percentage) as avg_completion  
+               FROM watch_history wh  
+               WHERE wh.created_at > NOW() - INTERVAL '30 days'
+               GROUP BY time_period
+              ORDER BY watch_count DESC"#,
+        )
+        .fetch_all(pool)
+        .await?;
+
+        Ok(rows
+            .into_iter()
+            .map(
+                |(time_period, watch_count, avg_completion)| WatchTimePattern {
+                    time_period,
+                    watch_count,
+                    avg_completion,
+                },
+            )
+            .collect())
+    }
+
+    pub async fn get_data_quality_report(pool: &PgPool) -> Result<DataQualityReport, sqlx::Error> {
+        let total: i64 = sqlx::query_scalar("SELECT COUNT(*) FROM watch_history")
+            .fetch_one(pool)
+            .await?;
+
+        let flagged: i64 = sqlx::query_scalar(
+            "SELECT COUNT(*) FROM watch_history WHERE flagged_for_review = true",
+        )
+        .fetch_one(pool)
+        .await?;
+
+        let top_issues: Vec<(String, i64)> = sqlx::query_as(
+            "SELECT flag_type, COUNT(*) as count FROM data_quality_flags   
+             WHERE resolved = false   
+             GROUP BY flag_type   
+             ORDER BY count DESC   
+             LIMIT 5",
+        )
+        .fetch_all(pool)
+        .await?;
+
+        Ok(DataQualityReport {
+            total_records: total,
+            valid_records: total - flagged,
+            flagged_records: flagged,
+            validation_percentage: if total > 0 {
+                ((total - flagged) as f64 / total as f64) * 100.0
+            } else {
+                0.0
+            },
+            top_issues,
+        })
+    }
+}
+</file>
+
+<file path="src/services/mod.rs">
+pub mod analytics;
+pub mod segmentation;
+pub mod validation;
+</file>
+
+<file path="src/services/segmentation.rs">
+// use serde_json::json;
+// use sqlx::{Error, PgPool};
+// use uuid::Uuid;
+
+// pub use crate::models::*;
+
+// pub struct SegmentationService;
+
+// impl SegmentationService {
+//     pub async fn calculate_and_store_segment(pool: &PgPool) -> Result<(), Error> {
+//         let profiles = sqlx::query_as::<_, (Uuid,)>(
+//             "SELECT id FROM profiles WHERE created_at > NOW() - INTERVAL '1 days'",
+//         )
+//         .fetch_all(pool)
+//         .await?;
+
+//         for (profile_id,) in profiles {
+//             let segment = Self::calculate_user_segment(pool, profile_id).await?;
+//             Self::store_user_segment(pool, profile_id, segment).await?;
+//         }
+
+//         Ok(())
+//     }
+
+//     async fn calculate_user_segment(
+//         pool: &PgPool,
+//         profile_id: Uuid,
+//     ) -> Result<UserSegmentResponse, Error> {
+//         let stats = sqlx::query_as::<_, (i64, f64, i64, f64)>(
+//             r#"SELECT
+//                    COUNT(DISTINCT wh.movie_id) as total_movies_watched,
+//                    AVG(wh.completion_percentage) as avg_completion,
+//                    COUNT(DISTINCT m.genre) as genre_diversity,
+//                    COUNT(*) FILTER (
+//                        WHERE EXTRACT(DOW FROM wh.watched_at) IN (5,6,0)
+//                    )::float / NULLIF(COUNT(*), 0) as weekend_ratio
+//                 FROM watch_movies wh JOIN movies m ON wh.movie_id = m.id
+//                 WHERE wh.profile_id = $1
+//                 AND wh.watched_at > NOW() - INTERVAL '7 days'
+//             "#,
+//         )
+//         .bind(profile_id)
+//         .fetch_one(pool)
+//         .await?;
+
+//         let (movies_week, avg_completion, genre_diversity, weekend_ratio) = stats;
+
+//         let (segment_type, score, characteristics) = if movies_week >= 5 && avg_completion >= 85.0 {
+//             (
+//                 "BINGE_WATCHER",
+//                 0.95,
+//                 vec![
+//                     "High volume watcher".to_string(),
+//                     "Completes most movies".to_string(),
+//                     "Dedicated viewer".to_string(),
+//                 ],
+//             )
+//         } else if movies_week >= 1 && movies_week <= 4 && avg_completion >= 70.0 {
+//             (
+//                 "CASUAL_VIEWER",
+//                 0.85,
+//                 vec![
+//                     "Watches occasionally".to_string(),
+//                     "Completes most movies".to_string(),
+//                     "Enjoys variety".to_string(),
+//                 ],
+//             )
+//         } else if genre_diversity >= 5 && weekend_ratio >= 0.5 {
+//             (
+//                 "EXPLORER",
+//                 0.90,
+//                 vec![
+//                     "Loves discovering new genres".to_string(),
+//                     "Watches mostly on weekends".to_string(),
+//                     "Adventurous viewer".to_string(),
+//                 ],
+//             )
+//         } else if weekend_ratio >= 0.8 {
+//             (
+//                 "WEEKEND_WARRIOR",
+//                 0.75,
+//                 vec![
+//                     "Weekend binge watcher".to_string(),
+//                     "Predictable patterns".to_string(),
+//                     "Works during week".to_string(),
+//                 ],
+//             )
+//         } else if movies_week == 0 {
+//             (
+//                 "INACTIVE",
+//                 0.50,
+//                 vec![
+//                     "No recent activity".to_string(),
+//                     "Churn risk".to_string(),
+//                     "Needs re-engagement".to_string(),
+//                 ],
+//             )
+//         } else {
+//             ("GENERAL", 0.60, vec!["Standard user".to_string()])
+//         };
+//         let recommendations = vec![
+//             "Personalized recommendations".to_string(),
+//             "Trending content".to_string(),
+//             "Similar movies".to_string(),
+//         ];
+
+//         Ok(UserSegmentResponse {
+//             segment_type: segment_type.to_string(),
+//             segment_score: score,
+//             description: format!("User is a {}", segment_type),
+//             characteristics,
+//             recommendations,
+//         })
+//     }
+
+//     async fn store_user_segment(
+//         pool: &PgPool,
+//         profile_id: Uuid,
+//         segment: UserSegmentResponse,
+//     ) -> Result<(), Error> {
+//        sqlx::query(
+//             r#"INSERT INTO user_segments
+//                (profile_id, segment_type, segment_score, last_calculated_at, valid_until, metadata)
+//             VALUES ($1, $2, $3, NOW(), NOW() + INTERVAL '7 days', $4)
+//             ON CONFLICT (profile_id) DO UPDATE
+//             SET segment_type = EXCLUDED.segment_type,
+//                 segment_score = EXCLUDED.segment_score,
+//                 last_calculated_at = NOW(),
+//                 valid_until = NOW() + INTERVAL '7 days',
+//                 metadata = EXCLUDED.metadata"#
+//         )
+//         .bind(profile_id)
+//         .bind(&segment.segment_type)
+//         .bind(segment.segment_score)
+//         .bind(json!({
+//             "description": segment.description,
+//             "characteristics": segment.characteristics,
+//         }))
+//         .execute(pool)
+//         .await?;
+
+//         Ok(())
+//     }
+// }
+</file>
+
+<file path="src/services/validation.rs">
+pub struct RuleValidator;
+
+impl RuleValidator {
+    // Rule 1.1: Duration cannot exceed movie length
+    // pub fn validate_duration(watch_duration: i32, total_duration: i32) -> Result<(), String> {
+    //     if watch_duration > total_duration {
+    //         return Err(format!(
+    //             "Watch duration ({}) exceeds movie length ({})",
+    //             watch_duration, total_duration
+    //         ));
+    //     }
+    //     Ok(())
+    // }
+
+    // Rule 1.2: Minimum watch time
+    // pub fn validate_minimum_watch(watch_duration: i32) -> Result<String, String> {
+    //     if watch_duration < 10 {
+    //         Ok("sampled".to_string()) // Mark as sampled, not rejected
+    //     } else {
+    //         Ok("valid".to_string())
+    //     }
+    // }
+
+    // Rule 2.1: Timestamp cannot be in future
+    // pub fn validate_timestamp(timestamp: i64) -> Result<(), String> {
+    //     let now = Utc::now().timestamp();
+    //     if timestamp > now {
+    //         return Err("Timestamp cannot be in the future".to_string());
+    //     }
+    //     Ok(())
+    // }
+
+    // Rule 3.1: Playback speed validation
+    pub fn validate_playback_speed(speed: f64) -> Result<f64, String> {
+        if speed < 0.5 || speed > 3.0 {
+            return Ok(1.0); // Clamp to normal speed  
+        }
+        Ok(speed)
+    }
+
+    // Rule 3.2: Interrupted count must be non-negative
+    pub fn validate_interrupt_count(count: i32) -> Result<(), String> {
+        if count < 0 {
+            return Err("Interrupted count cannot be negative".to_string());
+        }
+        Ok(())
+    }
+
+    // Rule 3.3: Consistency check
+    // pub fn validate_completion_consistency(
+    //     completed: bool,
+    //     completion_percentage: f64,
+    // ) -> Result<(), String> {
+    //     if completed && completion_percentage < 95.0 {
+    //         return Err(format!(
+    //             "Movie marked completed but completion rate is only {:.1}%",
+    //             completion_percentage
+    //         ));
+    //     }
+    //     Ok(())
+    // }
+
+    // Rule 3.4: Device type validation
+    pub fn validate_device_type(device: &str) -> Result<(), String> {
+        let allowed = vec!["web", "mobile", "tablet", "smart_tv"];
+        if !allowed.contains(&device) {
+            return Err(format!("Invalid device type: {}", device));
+        }
+        Ok(())
+    }
+
+    // Calculate completion percentage
+    pub fn calculate_completion_percentage(watch_duration: i32, total_duration: i32) -> f64 {
+        if total_duration == 0 {
+            return 0.0;
+        }
+        ((watch_duration as f64 / total_duration as f64) * 100.0)
+            .min(100.0)
+            .max(0.0)
+    }
+
+    // Determine completion reason
+    pub fn determine_completion_reason(completed: bool, completion_percentage: f64) -> String {
+        if completed || completion_percentage >= 95.0 {
+            "finished".to_string()
+        } else if completion_percentage >= 20.0 {
+            "abandoned".to_string()
+        } else {
+            "sampled".to_string()
+        }
+    }
+
+    // Flag suspicious records
+    // pub async fn create_quality_flag(
+    //     pool: &PgPool,
+    //     watch_history_id: Uuid,
+    //     flag_type: &str,
+    //     flag_severity: &str,
+    //     description: &str,
+    // ) -> Result<(), sqlx::Error> {
+    //     sqlx::query(
+    //         "INSERT INTO data_quality_flags
+    //          (watch_history_id, flag_type, flag_severity, description)
+    //          VALUES ($1, $2, $3, $4)",
+    //     )
+    //     .bind(watch_history_id)
+    //     .bind(flag_type)
+    //     .bind(flag_severity)
+    //     .bind(description)
+    //     .execute(pool)
+    //     .await?;
+
+    //     Ok(())
+    // }
+}
+</file>
+
+<file path="src/lib.rs">
+pub mod domains;
+pub mod dtos;
+
+pub mod handlers;
+pub mod middlewares;
+pub mod models;
+pub mod services;
+</file>
+
+<file path="src/logging.rs">
+use tracing::info;
+use tracing_subscriber;
+
+pub fn init_logging() {
+    let level = std::env::var("LOG_LEVEL").unwrap_or_else(|_| "info".to_string());
+
+    tracing_subscriber::fmt()
+        .with_max_level(level.parse().unwrap_or(tracing::Level::INFO))
+        .with_target(true)
+        .with_thread_ids(true)
+        .with_line_number(true)
+        .init();
+
+    info!("🚀 Logging initialized at level: {}", level);
+}
+</file>
+
+<file path="src/main.rs">
+use axum::{Json, Router, middleware, response::Result, routing::get};
+use dotenv::dotenv;
+use serde_json::json;
+use sqlx::postgres::PgPoolOptions;
+use std::{env, net::SocketAddr};
+use std::{sync::Arc, time::Duration};
+use tower_http::{cors::CorsLayer, services::ServeDir};
+use utoipa::OpenApi;
+// use utoipa_axum::router::OpenApiRouter;
+// use utoipa_swagger_ui::SwaggerUi;
+
+mod domains;
+mod dtos;
+
+mod handlers;
+mod logging;
+mod middlewares;
+mod models;
+mod runner;
+mod services;
+
+use handlers::*;
+
+use crate::middlewares::security_headers::add_security_headers;
+
+#[derive(OpenApi)]
+#[openapi(paths(
+    // handlers::get_movies,
+    // handlers::search_movies,
+    // handlers::get_movie_detail,
+    // handlers::register,
+    // handlers::login,
+    // handlers::get_user_profile,
+    // handlers::get_watch_history,
+    // handlers::save_watch_progress,
+    // handlers::get_favorites,
+    // handlers::toggle_favorite,
+    // handlers::save_enhanced_watch_progress,
+    // handlers::get_completion_by_genre,
+    // handlers::get_watch_patterns,
+    // handlers::get_data_quality,
+    // handlers::get_user_segment,
+    // handlers::upload_movie
+))]
+struct ApiDoc;
+
+/// Return JSON version of an OpenAPI schema
+#[utoipa::path(
+    get,
+    path = "/api-docs/openapi.json",
+    responses(
+        (status = 200, description = "JSON file", body = ())
+    )
+)]
+async fn openapi() -> Json<utoipa::openapi::OpenApi> {
+    Json(ApiDoc::openapi())
+}
+
+pub async fn health_check() -> Json<serde_json::Value> {
+    Json(json!({
+        "status": "ok",
+        "version": "1.0.0",
+        "timestamp": chrono::Utc::now().to_rfc3339()
+    }))
+}
+
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    dotenv().ok();
+    logging::init_logging();
+
+    let database_url = env::var("DATABASE_URL")
+        .unwrap_or_else(|_| "postgres://moviey:password@localhost:5433/moviey".to_string());
+    let upload_dir = env::var("UPLOAD_DIR").unwrap_or_else(|_| "./uploads".to_string());
+    let output_dir = env::var("OUTPUT_DIR").unwrap_or_else(|_| "./stream_output".to_string());
+
+    let pool = PgPoolOptions::new()
+        .max_connections(20) // Increased for production
+        .min_connections(5) // Minimum idle connections
+        .acquire_timeout(Duration::from_secs(30))
+        .idle_timeout(Duration::from_secs(600))
+        .max_lifetime(Duration::from_secs(1800))
+        .connect(&database_url)
+        .await?;
+
+    // Run migrations (if you have any)
+    sqlx::migrate!("./migrations").run(&pool).await?;
+    println!("Database connected and migrations applied.");
+
+    let pool = Arc::new(pool);
+    let watcher_pool = pool.clone();
+    let output_base = output_dir.to_string();
+
+    tokio::spawn(async move {
+        let runner = runner::Runner::new(watcher_pool, upload_dir.to_string(), output_base);
+        runner.start().await;
+    });
+
+    let app = Router::new()
+        // Health check route
+        .route("/health", get(health_check))
+        // Swagger UI route
+        .route("/api-docs/openapi.json", get(openapi))
+        // Modular routers with nesting
+        .nest("/api/movies", movie_router(pool.clone()))
+        .nest("/api/auth", user_router(pool.clone()))
+        .nest("/api/watch-history", watch_history_router(pool.clone()))
+        .nest("/api/favorites", favorites_router(pool.clone()))
+        .nest("/api/analytics", analytics_router(pool.clone()))
+        // User-specific routes
+        .nest_service("/streams", ServeDir::new(output_dir))
+        .layer(middleware::from_fn(add_security_headers))
+        .layer(CorsLayer::permissive());
+
+    // 4. START THE SERVER
+    let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
+    println!("🚀 API Live at http://{}", addr);
+
+    let listener = tokio::net::TcpListener::bind(addr).await?;
+    axum::serve(listener, app).await?;
+
+    Ok(())
+}
+</file>
+
+<file path=".env.template">
+DATABASE_URL=postgres://moviey:password@localhost:5433/moviey
+UPLOAD_DIR=./uploads
+OUTPUT_DIR=./stream_output
+
+# JWT Secret (use a strong random key)  
+SECRET_KEY=secure_random_key_for_jwt_signing  
+
+# Server  
+HOST=0.0.0.0  
+PORT=3000  
+
+# Logging  
+LOG_LEVEL=info  
+RUST_LOG=info  
+
+# Video Processing  
+MAX_UPLOAD_SIZE=5GB  
+ALLOWED_VIDEO_FORMATS=mp4,mkv,avi
+</file>
+
+<file path=".gitignore">
+stream_output/
+uploads/
+.env
+</file>
+
+<file path="Cargo.toml">
+[profile.release]  
+opt-level = 3  
+lto = true  
+codegen-units = 1  
+strip = true  
+
+[profile.production]  
+inherits = "release"  
+
+[package]
+name = "transcoder"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+notify-debouncer-full = "0.7.0"
+tokio = { version = "1.50", features = ["full"] }
+sqlx = { version = "0.8.6", features = ["runtime-tokio", "tls-rustls", "postgres", "uuid", "chrono", "bigdecimal", "rust_decimal"] }
+serde = { version = "1.0.228", features = ["derive"] }
+axum = { version = "0.8.8", features = ["macros", "multipart"] }
+tower-http = { version = "0.6.8", features = ["fs", "cors"] }
+uuid = { version = "1.22", features = ["v4", "serde"] }
+bcrypt = "0.19.0"
+jsonwebtoken = { version = "10.3.0", features = ["rust_crypto"] }
+chrono = { version = "0.4.44", features = ["serde"] }
+async-trait = "0.1.89"
+axum-extra = { version = "0.12.5", features = ["typed-header"] }
+thiserror = "2.0.18"
+dotenv = "0.15.0"
+serde_json = "1.0.149"
+rust_decimal = "1.40.0"
+tracing-subscriber = { version = "0.3.23", features = ["env-filter"] }
+tracing = "0.1.44"
+utoipa = { version = "5.4.0", features = ["chrono", "uuid"] }
+utoipa-swagger-ui = { version = "9.0.2", features = ["axum"] }
+utoipa-axum = "0.2.0"
+</file>
+
+<file path="Dockerfile">
+# Build stage
+FROM --platform=linux/arm64 rust:1.94-bullseye as builder
+
+WORKDIR /app
+
+# Copy manifest files
+COPY Cargo.toml Cargo.lock ./
+
+# Copy source code
+COPY src ./src
+COPY migrations ./migrations
+COPY .sqlx ./.sqlx
+
+# Build release
+RUN rustup target add aarch64-unknown-linux-gnu
+RUN cargo build --release --locked  --target aarch64-unknown-linux-gnu
+RUN cp ./target/aarch64-unknown-linux-gnu/release/transcoder /app/target/release/transcoder
+
+# Runtime stage
+FROM --platform=linux/arm64 debian:bullseye-slim
+
+RUN apt-get update && apt-get install -y \
+    ffmpeg \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*  
+
+WORKDIR /app  
+
+# Copy binary from builder
+COPY --from=builder /app/target/release/transcoder /usr/local/bin
+
+# Create neccessary directories
+RUN mkdir -p /app/uploads /app/stream_output
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+    CMD [ "curl", "-f", "http://localhost:8080/health", "||", "exit", "1" ]
+
+EXPOSE 3000
+
+CMD ["transcoder"]
+</file>
+
+</files>

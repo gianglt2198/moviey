@@ -1,4 +1,4 @@
-use tracing::{debug, error, info, warn};
+use tracing::info;
 use tracing_subscriber;
 
 pub fn init_logging() {

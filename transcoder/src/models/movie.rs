@@ -1,7 +1,8 @@
 use serde::{Deserialize, Serialize};
+use utoipa::{IntoParams, ToSchema};
 use uuid::Uuid;
 
-#[derive(Debug, Serialize, Deserialize, Clone, Copy, PartialEq, sqlx::Type)]
+#[derive(Debug, Serialize, Deserialize, Clone, Copy, PartialEq, sqlx::Type, ToSchema)]
 #[sqlx(type_name = "movie_status", rename_all = "lowercase")]
 pub enum MovieStatus {
     #[serde(rename = "pending")]
@@ -14,7 +15,7 @@ pub enum MovieStatus {
     Failed,
 }
 
-#[derive(Debug, Serialize, Deserialize, Clone)]
+#[derive(Debug, Serialize, Deserialize, Clone, ToSchema)]
 pub struct MovieDto {
     pub id: Uuid,
     pub title: String,
@@ -24,7 +25,7 @@ pub struct MovieDto {
     pub thumbnail_url: String,
 }
 
-#[derive(Debug, Serialize, Deserialize, Clone)]
+#[derive(Debug, Serialize, Deserialize, Clone, ToSchema)]
 pub struct MovieDetailDto {
     pub id: Uuid,
     pub title: String,
@@ -40,7 +41,7 @@ pub struct MovieDetailDto {
 }
 
 // Watch Progress DTO
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, ToSchema)]
 pub struct WatchProgressDto {
     pub movie_id: Uuid,
     pub position_seconds: i32,
@@ -48,7 +49,7 @@ pub struct WatchProgressDto {
 }
 
 // Search Query
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, IntoParams)]
 pub struct SearchQuery {
     pub q: Option<String>,
     pub genre: Option<String>,
@@ -56,7 +57,7 @@ pub struct SearchQuery {
 }
 
 // Favorite Request
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, ToSchema)]
 pub struct FavoriteRequest {
     pub movie_id: Uuid,
 }

@@ -1,11 +1,11 @@
-mod favorites;
-mod movie;
-mod recommendation;
-mod user;
-mod watch_history;
+pub mod analytics;
+pub mod favorites;
+pub mod movie;
+pub mod user;
+pub mod watch_history;
 
-pub use favorites::*;
-pub use movie::*;
-pub use recommendation::*;
-pub use user::*;
-pub use watch_history::*;
+pub use analytics::router as analytics_router;
+pub use favorites::router as favorites_router;
+pub use movie::router as movie_router;
+pub use user::router as user_router;
+pub use watch_history::router as watch_history_router;
