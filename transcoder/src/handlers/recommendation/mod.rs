@@ -13,11 +13,11 @@ pub mod handler;
 pub fn router(pool: Arc<PgPool>, redis: Arc<RedisPool>) -> Router {
     Router::new()
         .route(
-            "/save-enhanced",
-            post(handler::save_enhanced_watch_progress),
+            "/generate/{user_id}",
+            post(handler::generate_recommendations),
         )
-        .route("/", get(handler::get_watch_histories))
-        .route("/{history_id}", get(handler::get_watch_history))
-        .route("/save", post(handler::save_watch_progress))
+        .route("/{user_id}", get(handler::get_recommendations))
+        .route("/similar/{movie_id}", get(handler::get_similar_movies))
+        .route("/feedback", post(handler::save_recommendation_feedback))
         .with_state((pool, redis))
 }

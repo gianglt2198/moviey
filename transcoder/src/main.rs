@@ -18,9 +18,12 @@ mod middlewares;
 mod models;
 mod runner;
 mod services;
+mod scheduler;
+mod config;
 
 use handlers::*;
 
+use crate::config::redis::{RedisConfig, RedisPool};
 use crate::middlewares::security_headers::add_security_headers;
 
 #[derive(OpenApi)]
@@ -90,7 +93,7 @@ use crate::middlewares::security_headers::add_security_headers;
 )]
 struct ApiDoc;
 /// Security scheme addon for JWT authentication  
-struct SecurityAddon;  
+struct SecurityAddon;
 
 impl Modify for SecurityAddon {  
     fn modify(&self, openapi: &mut utoipa::openapi::OpenApi) {  
@@ -123,6 +126,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let upload_dir = env::var("UPLOAD_DIR").unwrap_or_else(|_| "./uploads".to_string());
     let output_dir = env::var("OUTPUT_DIR").unwrap_or_else(|_| "./stream_output".to_string());
 
+       // Initialize Redis  
+    let redis_config = RedisConfig::default();  
+    let redis = RedisPool::new(redis_config).await?;  
+    let redis = Arc::new(redis);  
+
+
     let pool = PgPoolOptions::new()
         .max_connections(20) // Increased for production
         .min_connections(5) // Minimum idle connections
@@ -145,6 +154,13 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         runner.start().await;
     });
 
+    let scheduler_pool = pool.clone();  
+    let scheduler_redis = redis.clone();
+    tokio::spawn(async move {  
+        let runner = scheduler::BatchJobRunner::new(scheduler_pool, scheduler_redis);  
+        runner.start().await;  
+    });
+
     let app = Router::new()
         // Swagger UI route
         .merge(SwaggerUi::new("/api-docs/swagger").url("/api-docs/openapi.json", ApiDoc::openapi()))  
@@ -153,9 +169,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         // Modular routers with nesting
         .nest("/api/movies", movie_router(pool.clone()))
         .nest("/api/auth", user_router(pool.clone()))
-        .nest("/api/watch-history", watch_history_router(pool.clone()))
+        .nest("/api/watch-history", watch_history_router(pool.clone(), redis.clone()))
         .nest("/api/favorites", favorites_router(pool.clone()))
         .nest("/api/analytics", analytics_router(pool.clone()))
+        .nest("/api/recommendations", recommendation_router(pool.clone(), redis.clone()))
         // User-specific routes
         .nest_service("/streams", ServeDir::new(output_dir))
         .layer(middleware::from_fn(add_security_headers))

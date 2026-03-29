@@ -4,10 +4,12 @@ use axum::extract::Path;
 use axum::{Json, extract::State, http::StatusCode};
 use sqlx::PgPool;
 
+use crate::config::redis::RedisPool;
 use crate::domains::WatchHistory;
 use crate::dtos::mappers::*;
 use crate::dtos::watch_history_dto::*;
 use crate::models::Claims;
+use crate::services::cache::CacheInvalidation;
 use crate::services::validation::RuleValidator;
 
 /// Save watch progress
@@ -27,7 +29,7 @@ use crate::services::validation::RuleValidator;
 )]  
 pub async fn save_watch_progress(
     claims: Claims,
-    State(pool): State<Arc<PgPool>>,
+    State((pool, _redis)): State<(Arc<PgPool>, Arc<RedisPool>)>,  
     Json(payload): Json<SaveWatchProgressRequest>,
 ) -> Result<StatusCode, StatusCode> {
     // Get profile_id for this user
@@ -84,7 +86,7 @@ pub async fn save_watch_progress(
 )]  
 pub async fn save_enhanced_watch_progress(
     claims: Claims,
-    State(pool): State<Arc<PgPool>>,
+    State((pool, redis)): State<(Arc<PgPool>, Arc<RedisPool>)>,  
     Json(payload): Json<EnhancedWatchProgressRequest>,
 ) -> Result<StatusCode, StatusCode> {
     // Get profile_id
@@ -158,6 +160,14 @@ pub async fn save_enhanced_watch_progress(
     .await
     .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
 
+    // INVALIDATE CACHE  
+    let mut invalidation = CacheInvalidation::new(redis.get_connection());  
+    invalidation  
+        .on_watch_event(profile_id, payload.movie_id)  
+        .await  
+        .ok(); // Log errors but don't fail the request  
+
+
     Ok(StatusCode::CREATED)
 }
 
@@ -177,7 +187,7 @@ pub async fn save_enhanced_watch_progress(
 )]  
 pub async fn get_watch_histories(
     claims: Claims,
-    State(pool): State<Arc<PgPool>>,
+    State((pool, _redis)): State<(Arc<PgPool>, Arc<RedisPool>)>,  
 ) -> Result<Json<Vec<WatchHistoryResponse>>, StatusCode> {
     let profile_id: Option<uuid::Uuid> =
         sqlx::query_scalar("SELECT id FROM profiles WHERE user_id = $1 LIMIT 1")
@@ -223,7 +233,7 @@ pub async fn get_watch_histories(
 )]  
 pub async fn get_watch_history(
     claims: Claims,
-    State(pool): State<Arc<PgPool>>,
+    State((pool, _redis)): State<(Arc<PgPool>, Arc<RedisPool>)>,  
     Path(history_id): Path<uuid::Uuid>,
 ) -> Result<Json<WatchHistoryDetailResponse>, StatusCode> {
     let profile_id: Option<uuid::Uuid> =

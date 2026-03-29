@@ -1,7 +1,11 @@
 # Build stage
-FROM --platform=linux/arm64 rust:1.94-bullseye as builder
+FROM --platform=linux/arm64 rust:1.94-slim-bookworm as builder
 
 WORKDIR /app
+
+RUN apt-get update && apt-get install -y \
+    curl \
+    ca-certificates
 
 # Copy manifest files
 COPY Cargo.toml Cargo.lock ./
@@ -17,7 +21,7 @@ RUN cargo build --release --locked  --target aarch64-unknown-linux-gnu
 RUN cp ./target/aarch64-unknown-linux-gnu/release/transcoder /app/target/release/transcoder
 
 # Runtime stage
-FROM --platform=linux/arm64 debian:bullseye-slim
+FROM --platform=linux/arm64 debian:bookworm-slim
 
 RUN apt-get update && apt-get install -y \
     ffmpeg \
