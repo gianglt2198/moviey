@@ -1,7 +1,8 @@
-mod analytics;
-mod movie;
-mod user;
+use serde::{Deserialize, Serialize};
+use utoipa::ToSchema;
 
-pub use analytics::*;
-pub use movie::*;
-pub use user::*;
+#[derive(Debug, Serialize, Deserialize, ToSchema)]
+pub struct Claims {
+    pub sub: uuid::Uuid, // User ID
+    pub exp: i64,        // Expiration timestamp
+}
