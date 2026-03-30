@@ -1,5 +1,6 @@
 pub mod analytics;
 pub mod favorites;
+pub mod jobs;
 pub mod movie;
 pub mod recommendation;
 pub mod user;
@@ -7,6 +8,7 @@ pub mod watch_history;
 
 pub use analytics::router as analytics_router;
 pub use favorites::router as favorites_router;
+pub use jobs::router as jobs_router;
 pub use movie::router as movie_router;
 pub use recommendation::router as recommendation_router;
 pub use user::router as user_router;

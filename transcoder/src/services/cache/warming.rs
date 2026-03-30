@@ -38,7 +38,9 @@ impl CacheWarmer {
     }
 
     /// Warm cache for active users (pre-calculate recommendations)
-    pub async fn warm_active_users(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub async fn warm_active_users(
+        &mut self,
+    ) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         println!("🔥 Starting cache warming for active users...");
 
         let active_users = self.get_active_users().await?;
@@ -70,7 +72,7 @@ impl CacheWarmer {
         &mut self,
         profile_id: &Uuid,
         recommender: &HybridRecommender,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    ) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         // Generate recommendations
         let recommendations = recommender
             .generate_recommendation(self.pool.as_ref(), *profile_id, 10, 0.3)
@@ -116,7 +118,7 @@ impl CacheWarmer {
         &mut self,
         profile_id: Uuid,
         recommender: &HybridRecommender,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    ) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         // Check if already warming
         let warming: Option<String> = self
             .redis

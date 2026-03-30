@@ -173,6 +173,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .nest("/api/favorites", favorites_router(pool.clone()))
         .nest("/api/analytics", analytics_router(pool.clone()))
         .nest("/api/recommendations", recommendation_router(pool.clone(), redis.clone()))
+        .nest("/api/jobs", jobs_router(pool.clone())) 
         // User-specific routes
         .nest_service("/streams", ServeDir::new(output_dir))
         .layer(middleware::from_fn(add_security_headers))
