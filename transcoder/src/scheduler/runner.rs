@@ -45,13 +45,18 @@ impl BatchJobRunner {
 
         // Run cache warming daily at 3 AM UTC
         let cache_warming_job = {
-            let jobs = Jobs::new(self.pool.clone(), self.redis.clone());
+            let pool = self.pool.clone();
+            let redis = self.redis.clone();
             every(1)
                 .days()
                 .at(03, 00, 00)
                 .in_timezone(&Utc)
-                .perform(|| async {
-                    println!("🔄 Starting daily cache warming...");
+                .perform(move || {
+                    let pool = pool.clone();
+                    let redis = redis.clone();
+                    async move {
+                        cache_warming_job(pool, redis).await;
+                    }
                 })
         };
         spawn(cache_warming_job);

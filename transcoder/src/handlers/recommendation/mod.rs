@@ -19,5 +19,6 @@ pub fn router(pool: Arc<PgPool>, redis: Arc<RedisPool>) -> Router {
         .route("/{user_id}", get(handler::get_recommendations))
         .route("/similar/{movie_id}", get(handler::get_similar_movies))
         .route("/feedback", post(handler::save_recommendation_feedback))
+        .route("/cache/performance", get(handler::get_cache_performance))
         .with_state((pool, redis))
 }

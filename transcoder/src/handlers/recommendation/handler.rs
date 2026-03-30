@@ -189,3 +189,37 @@ pub async fn get_cache_stats(
         "invalidations": stats.invalidations,  
     })))  
 }  
+
+/// Get detailed cache performance metrics  
+#[utoipa::path(  
+    get,  
+    path = "/api/recommendations/cache/performance",  
+    responses(  
+        (status = 200, description = "Performance metrics", body = serde_json::Value),  
+    ),  
+    tag = "Recommendations"  
+)]  
+pub async fn get_cache_performance(  
+    State((_pool, redis)): State<(Arc<PgPool>, Arc<RedisPool>)>,  
+) -> Result<Json<serde_json::Value>, StatusCode> {  
+    let mut cache = RecommendationCache::new(redis.get_connection());  
+    let stats = cache.get_cache_stats().await  
+        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;  
+
+    let response = serde_json::json!({  
+        "metrics": {  
+            "cache_hits": stats.hits,  
+            "cache_misses": stats.misses,  
+            "total_requests": stats.total_requests,  
+            "hit_rate_percentage": stats.hit_rate,  
+            "cache_invalidations": stats.invalidations,  
+        },  
+        "efficiency": {  
+            "avg_requests_per_user": stats.total_requests as f64 / stats.hits.max(1) as f64,  
+            "recommendation_generation_saved": stats.hits,  
+        },  
+        "status": "healthy"  
+    });  
+
+    Ok(Json(response))  
+}  
