@@ -7,9 +7,7 @@ CREATE TABLE IF NOT EXISTS job_executions (
     completed_at TIMESTAMPTZ,
     error_message TEXT,
     duration_seconds INT,
-    created_at TIMESTAMPTZ DEFAULT NOW(),
-    INDEX idx_job_executions_name_started ON job_executions(job_name, started_at DESC),
-    INDEX idx_job_executions_status ON job_executions(status)
+    created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 -- User Embeddings (for collaborative filtering)
@@ -60,6 +58,11 @@ CREATE TABLE IF NOT EXISTS job_statistics (
 );
 
 -- Indexes for performance
+CREATE INDEX IF NOT EXISTS idx_job_executions_name_started   
+    ON job_executions(job_name, started_at DESC);  
+
+CREATE INDEX IF NOT EXISTS idx_job_executions_status   
+    ON job_executions(status);  
 CREATE INDEX idx_user_embeddings_profile ON user_embeddings(profile_id);
 CREATE INDEX idx_movie_embeddings_movie ON movie_embeddings(movie_id);
 CREATE INDEX idx_job_errors_job_exec ON job_errors(job_execution_id);
