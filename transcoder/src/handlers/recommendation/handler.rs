@@ -12,7 +12,7 @@ use crate::{
     config::redis::RedisPool,
     dtos::*,
     models::Claims,
-    services::{cache::RecommendationCache, hybrid_recommender::HybridRecommender},
+    services::{cache::store::CacheManager, hybrid_recommender::HybridRecommender},
 };
 
 
@@ -49,12 +49,10 @@ pub async fn generate_recommendations(
     let limit = payload.limit.unwrap_or(10).min(50);
     let diversity = payload.diversity_factor.unwrap_or(0.5).clamp(0.0, 1.0);
 
-    let mut cache = RecommendationCache::new(redis.get_connection());  
+    let cache = CacheManager::new(redis.get_connection());  
 
         // Try to get from cache first  
     if let Ok(Some(cached)) = cache.get_recommendations(profile_id).await {  
-        cache.increment_hit().await.ok();  
-        
         let response = RecommendationsListResponse {  
             recommendations: cached.recommendations[..limit as usize].to_vec(),  
             total: cached.recommendations.len() as i32,  
@@ -64,10 +62,6 @@ pub async fn generate_recommendations(
 
         return Ok(Json(response));  
     }  
-
-     // Cache miss - generate recommendations  
-    cache.increment_miss().await.ok();  
-
 
     let recommender = HybridRecommender::default();
     let recommendations = recommender
@@ -162,64 +156,4 @@ pub async fn save_recommendation_feedback(
 ) -> Result<StatusCode, StatusCode> {  
     // TODO: Implement feedback logging  
     Ok(StatusCode::CREATED)  
-}  
-
-
-/// Get cache statistics  
-#[utoipa::path(  
-    get,  
-    path = "/api/recommendations/cache/stats",  
-    responses(  
-        (status = 200, description = "Cache statistics", body = serde_json::Value),  
-    ),  
-    tag = "Recommendations"  
-)]  
-pub async fn get_cache_stats(  
-    State((_pool, redis)): State<(Arc<PgPool>, Arc<RedisPool>)>,  
-) -> Result<Json<serde_json::Value>, StatusCode> {  
-    let mut cache = RecommendationCache::new(redis.get_connection());  
-    let stats = cache.get_cache_stats().await  
-        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;  
-
-    Ok(Json(serde_json::json!({  
-        "hits": stats.hits,  
-        "misses": stats.misses,  
-        "total_requests": stats.total_requests,  
-        "hit_rate": format!("{:.2}%", stats.hit_rate),  
-        "invalidations": stats.invalidations,  
-    })))  
-}  
-
-/// Get detailed cache performance metrics  
-#[utoipa::path(  
-    get,  
-    path = "/api/recommendations/cache/performance",  
-    responses(  
-        (status = 200, description = "Performance metrics", body = serde_json::Value),  
-    ),  
-    tag = "Recommendations"  
-)]  
-pub async fn get_cache_performance(  
-    State((_pool, redis)): State<(Arc<PgPool>, Arc<RedisPool>)>,  
-) -> Result<Json<serde_json::Value>, StatusCode> {  
-    let mut cache = RecommendationCache::new(redis.get_connection());  
-    let stats = cache.get_cache_stats().await  
-        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;  
-
-    let response = serde_json::json!({  
-        "metrics": {  
-            "cache_hits": stats.hits,  
-            "cache_misses": stats.misses,  
-            "total_requests": stats.total_requests,  
-            "hit_rate_percentage": stats.hit_rate,  
-            "cache_invalidations": stats.invalidations,  
-        },  
-        "efficiency": {  
-            "avg_requests_per_user": stats.total_requests as f64 / stats.hits.max(1) as f64,  
-            "recommendation_generation_saved": stats.hits,  
-        },  
-        "status": "healthy"  
-    });  
-
-    Ok(Json(response))  
 }  

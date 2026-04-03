@@ -1,5 +1,5 @@
 use crate::config::redis::RedisPool;
-use crate::scheduler::{JobExecutor, executor};
+use crate::scheduler::{JobExecutor};
 use crate::services::cache::warming::CacheWarmer;
 use sqlx::PgPool;
 use std::sync::Arc;

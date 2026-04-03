@@ -9,7 +9,7 @@ use crate::domains::WatchHistory;
 use crate::dtos::mappers::*;
 use crate::dtos::watch_history_dto::*;
 use crate::models::Claims;
-use crate::services::cache::CacheInvalidation;
+use crate::services::cache::invalidation::CacheInvalidation;
 use crate::services::validation::RuleValidator;
 
 /// Save watch progress

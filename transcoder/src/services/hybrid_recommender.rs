@@ -1,7 +1,6 @@
 use std::collections::HashSet;
 
-use sqlx::{PgPool, pool};
-use utoipa::openapi::content;
+use sqlx::PgPool;
 use uuid::Uuid;
 
 use crate::services::recommendations::{
@@ -15,10 +14,7 @@ pub struct HybridRecommender {
 
 impl Default for HybridRecommender {
     fn default() -> Self {
-        Self {
-            collab_weight: 0.4,
-            content_weight: 0.6,
-        }
+        HybridRecommender::new(0.4, 0.6)
     }
 }
 

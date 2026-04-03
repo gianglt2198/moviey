@@ -4,141 +4,140 @@ use sqlx::PgPool;
 use std::sync::Arc;
 use uuid::Uuid;
 
-use super::keys::CacheKeys;
-use super::store::RecommendationCache;
+use super::{keys::CacheKeys, store::CacheManager};
+use crate::dtos::recommendation_dto::RecommendationResponse;
 use crate::services::hybrid_recommender::HybridRecommender;
+
+#[derive(Debug, Clone)]
+pub struct CacheWarmingMetrics {
+    pub successful: i32,
+    pub failed: i32,
+}
+
+impl CacheWarmingMetrics {
+    fn new() -> Self {
+        Self {
+            successful: 0,
+            failed: 0,
+        }
+    }
+}
 
 pub struct CacheWarmer {
     redis: ConnectionManager,
+    manager: CacheManager,
     pool: Arc<PgPool>,
-    rec_cache: RecommendationCache,
 }
 
 impl CacheWarmer {
     pub fn new(redis: ConnectionManager, pool: Arc<PgPool>) -> Self {
-        let rec_cache = RecommendationCache::new(redis.clone());
         Self {
-            redis,
+            redis: redis.clone(),
             pool,
-            rec_cache,
+            manager: CacheManager::new(redis),
         }
     }
 
-    /// Get active users (watched something in last 30 days)
+    /// Get active users (watched something in last 30 days)  
     pub async fn get_active_users(&self) -> Result<Vec<Uuid>, sqlx::Error> {
         sqlx::query_scalar::<_, Uuid>(
-            r#"SELECT DISTINCT profile_id 
-               FROM watch_history 
-               WHERE watched_at > NOW() - INTERVAL '30 days'
-               ORDER BY COUNT(*) DESC
+            r#"SELECT DISTINCT profile_id   
+               FROM watch_history   
+               WHERE watched_at > NOW() - INTERVAL '30 days'  
+               ORDER BY COUNT(*) DESC  
                LIMIT 1000"#,
         )
         .fetch_all(self.pool.as_ref())
         .await
     }
 
-    /// Warm cache for active users (pre-calculate recommendations)
     pub async fn warm_active_users(
         &mut self,
     ) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
-        println!("🔥 Starting cache warming for active users...");
-
         let active_users = self.get_active_users().await?;
         let total = active_users.len();
 
-        println!("📊 Found {} active users", total);
-
         let recommender = HybridRecommender::default();
+        let mut metrics = CacheWarmingMetrics::new();
 
-        for (idx, profile_id) in active_users.iter().enumerate() {
-            match self.warm_user(profile_id, &recommender).await {
-                Ok(_) => {
-                    if (idx + 1) % 100 == 0 {
-                        println!("✅ Warmed cache for {}/{} users", idx + 1, total);
-                    }
+        for (i, profile_id) in active_users.into_iter().enumerate() {
+            println!("Warming cache for user {}/{}: {}", i + 1, total, profile_id);
+            match self.warm_user(profile_id.clone(), &recommender).await {
+                Ok(_recs) => {
+                    metrics.successful += 1;
                 }
                 Err(e) => {
-                    eprintln!("❌ Error warming cache for user {}: {:?}", profile_id, e);
+                    eprintln!("Failed to warm cache for user {}: {}", profile_id, e);
+                    metrics.failed += 1;
                 }
             }
         }
 
-        println!("✨ Cache warming complete!");
+        self.store_warming_metrics(metrics).await.ok();
+
         Ok(())
     }
 
-    /// Warm cache for a single user
     pub async fn warm_user(
         &mut self,
-        profile_id: &Uuid,
+        profile_id: Uuid,
         recommender: &HybridRecommender,
     ) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         // Generate recommendations
         let recommendations = recommender
-            .generate_recommendation(self.pool.as_ref(), *profile_id, 10, 0.3)
+            .generate_recommendation(self.pool.as_ref(), profile_id, 10, 0.3)
             .await?;
 
         // Convert to response format
-        let responses: Vec<_> = recommendations
+        let responses: Vec<RecommendationResponse> = recommendations
             .iter()
             .enumerate()
-            .map(|(idx, (movie_id, score, reason))| {
-                // In production, fetch actual movie details
-                crate::dtos::recommendation_dto::RecommendationResponse {
-                    movie_id: *movie_id,
-                    title: format!("Movie {}", idx),
-                    score: *score,
-                    reason: reason.clone(),
-                    rank: (idx + 1) as i32,
-                    thumbnail_url: format!(
-                        "http://localhost:3000/streams/{}/thumbnail.jpg",
-                        movie_id
-                    ),
-                    genre: None,
-                }
+            .map(|(idx, (movie_id, score, reason))| RecommendationResponse {
+                movie_id: *movie_id,
+                title: format!("Movie {}", idx),
+                score: *score,
+                reason: reason.clone(),
+                rank: (idx + 1) as i32,
+                thumbnail_url: format!("http://localhost:3000/streams/{}/thumbnail.jpg", movie_id),
+                genre: None,
             })
             .collect();
 
-        // Cache them
-        self.rec_cache
-            .set_recommendations(*profile_id, responses)
+        // Use generic cache to set recommendations
+        self.manager
+            .set_recommendations(profile_id, responses)
             .await?;
 
         // Mark user as warmed
         let _: () = self
             .redis
-            .set_ex(CacheKeys::warming_status(*profile_id), "completed", 300)
+            .set_ex(CacheKeys::warming_status(profile_id), "completed", 300)
             .await?;
 
         Ok(())
     }
 
-    /// Lazy warm cache (warm on-demand for new users)
-    pub async fn warm_on_demand(
+    async fn store_warming_metrics(
         &mut self,
-        profile_id: Uuid,
-        recommender: &HybridRecommender,
-    ) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
-        // Check if already warming
-        let warming: Option<String> = self
-            .redis
-            .get(CacheKeys::warming_status(profile_id))
-            .await?;
-
-        if warming.is_some() {
-            // Already warming, skip
-            return Ok(());
-        }
-
-        // Mark as warming
+        metrics: CacheWarmingMetrics,
+    ) -> Result<(), redis::RedisError> {
+        let key = "rec:metrics:warming";
         let _: () = self
             .redis
-            .set_ex(CacheKeys::warming_status(profile_id), "in_progress", 60)
+            .hset_multiple(
+                key,
+                &[
+                    ("last_run", chrono::Utc::now().to_rfc3339().as_str()),
+                    ("successful", metrics.successful.to_string().as_str()),
+                    ("failed", metrics.failed.to_string().as_str()),
+                    (
+                        "total",
+                        (metrics.successful + metrics.failed).to_string().as_str(),
+                    ),
+                ],
+            )
             .await?;
-
-        // Warm it
-        self.warm_user(&profile_id, recommender).await?;
-
+        let _: () = self.redis.expire(key, 86400).await?;
         Ok(())
     }
 }
