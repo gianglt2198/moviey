@@ -167,8 +167,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         // Health check route
         .route("/health", get(health_check))
         // Modular routers with nesting
-        .nest("/api/movies", movie_router(pool.clone()))
         .nest("/api/auth", user_router(pool.clone()))
+        .nest("/api/movies", movie_router(pool.clone()))
         .nest("/api/watch-history", watch_history_router(pool.clone(), redis.clone()))
         .nest("/api/favorites", favorites_router(pool.clone()))
         .nest("/api/analytics", analytics_router(pool.clone()))

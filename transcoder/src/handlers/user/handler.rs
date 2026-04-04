@@ -5,6 +5,7 @@ use bcrypt::{DEFAULT_COST, hash, verify};
 use chrono::{Duration, Utc};
 use jsonwebtoken::{EncodingKey, Header, encode};
 use sqlx::PgPool;
+use uuid::Uuid;
 
 use crate::{
     domains::{Profile, User},
@@ -65,14 +66,17 @@ pub async fn login(
     State(pool): State<Arc<PgPool>>,
     Json(payload): Json<LoginRequest>,
 ) -> Result<Json<AuthResponse>, StatusCode> {
-    let user: User =
-        sqlx::query_as::<_, User>("SELECT id, password_hash FROM users WHERE email = $1")
+    let user: (Uuid, String) =
+        sqlx::query_as::<_, (Uuid, String)>("SELECT id, password_hash FROM users WHERE email = $1")
             .bind(payload.email)
             .fetch_one(pool.as_ref())
             .await
-            .map_err(|_| StatusCode::UNAUTHORIZED)?;
+            .map_err(|e| {
+                println!("Error occurred while fetching user: {}", e);
+                StatusCode::UNAUTHORIZED
+            })?;
 
-    let is_valid = verify(&payload.password, &user.password_hash)
+    let is_valid = verify(&payload.password, &user.1)
         .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
 
     if !is_valid {
@@ -80,7 +84,7 @@ pub async fn login(
     }
 
     let claims = Claims {
-        sub: user.id,
+        sub: user.0,
         exp: (Utc::now() + Duration::hours(24)).timestamp(),
     };
 
