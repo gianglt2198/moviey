@@ -1,29 +1,22 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import '../styles/SearchBar.css';
+import React, { useState } from "react";
+import { GENRES, SORT_OPTIONS } from "../constants/api";
+import "../styles/components/SearchBar.css";
 
-function SearchBar({ onSearch }) {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [genre, setGenre] = useState('');
-  const [sortBy, setSortBy] = useState('recent');
+function SearchBar({ onSearch, params = {} }) {
+  const [searchTerm, setSearchTerm] = useState(params.query || "");
+  const [genre, setGenre] = useState(params.genre || "");
+  const [sortBy, setSortBy] = useState(params.sort || "recent");
 
   const handleSearch = async () => {
-    try {
-      const res = await axios.get('http://localhost:3000/api/movies/search', {
-        params: {
-          q: searchTerm || undefined,
-          genre: genre || undefined,
-          sort: sortBy,
-        },
-      });
-      onSearch(res.data);
-    } catch (err) {
-      console.error('Search failed:', err);
-    }
+    await onSearch({
+      query: searchTerm,
+      genre,
+      sort: sortBy,
+    });
   };
 
   const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       handleSearch();
     }
   };
@@ -46,12 +39,11 @@ function SearchBar({ onSearch }) {
           className="filter-select"
         >
           <option value="">All Genres</option>
-          <option value="Action">Action</option>
-          <option value="Drama">Drama</option>
-          <option value="Comedy">Comedy</option>
-          <option value="Horror">Horror</option>
-          <option value="Thriller">Thriller</option>
-          <option value="Sci-Fi">Sci-Fi</option>
+          {GENRES.map((g) => (
+            <option key={g} value={g}>
+              {g}
+            </option>
+          ))}
         </select>
 
         <select
@@ -59,9 +51,11 @@ function SearchBar({ onSearch }) {
           onChange={(e) => setSortBy(e.target.value)}
           className="filter-select"
         >
-          <option value="recent">Recently Added</option>
-          <option value="rating">Top Rated</option>
-          <option value="title">Title A-Z</option>
+          {SORT_OPTIONS.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
         </select>
 
         <button onClick={handleSearch} className="search-btn">
